@@ -3,31 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>MEGA Silk Way — AR Quest & Route</title>
+  <title>MEGA Silk Way • Golden Ornament AR</title>
   <style>
     :root {
-      --bg: #050914;
-      --surface: #0c1528;
-      --surface-2: #14223f;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --gold: #f5c469;
-      --gold-bright: #fde68a;
-      --cyan: #67e8f9;
+      --bg: #050a17;
+      --velvet: #0b152b;
+      --velvet-2: #122140;
+      --text: #fbf7ee;
+      --muted: #d6cebe;
+      --gold: #eab34e;
+      --gold-light: #fde68a;
+      --gold-dark: #8a5a14;
+      --turquoise: #2dd4bf;
       --ok: #34d399;
-      --warn: #fbbf24;
-      --border: rgba(245, 196, 105, 0.32);
       --tap: 48px;
-      --cta: 52px;
-      --r-lg: 20px;
-      --r-md: 14px;
+      --r-xl: 24px;
+      --r-lg: 18px;
+      --r-md: 12px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       min-height: 100dvh;
-      background: radial-gradient(circle at 50% 0%, #1b2f5c 0%, var(--bg) 72%);
+      background: radial-gradient(circle at 50% 0%, #1a2e5a 0%, var(--bg) 74%);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       display: flex;
@@ -35,12 +34,12 @@
       align-items: stretch;
     }
 
-    .phone-frame {
+    .device-shell {
       width: 100%;
       max-width: 440px;
       min-height: 100dvh;
-      background: var(--surface);
-      border-inline: 1px solid var(--border);
+      background: var(--velvet);
+      border-inline: 1px solid rgba(234, 179, 78, 0.35);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -50,16 +49,16 @@
 
     @media (min-width: 520px) {
       body { padding: 18px; align-items: center; }
-      .phone-frame {
+      .device-shell {
         min-height: 780px;
         max-height: 920px;
-        border: 1px solid var(--border);
-        border-radius: 28px;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65);
+        border: 1.5px solid rgba(234, 179, 78, 0.45);
+        border-radius: 30px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.68);
       }
     }
 
-    /* Полноэкранная живая камера за интерфейсом */
+    /* Живая камера */
     #arCamera {
       position: absolute;
       inset: 0;
@@ -72,156 +71,202 @@
 
     #arCamera.active { display: block; }
 
-    .cam-overlay {
+    /* Тонкий золотой орнаментальный узор по краям экрана */
+    .ornament-frame {
       position: absolute;
-      inset: 0;
+      inset: 8px;
       z-index: 1;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(5, 9, 20, 0.72) 0%, rgba(5, 9, 20, 0.14) 50%, rgba(5, 9, 20, 0.82) 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(234, 179, 78, 0.42);
+      background-image:
+        repeating-linear-gradient(90deg, rgba(234, 179, 78, 0.22) 0 2px, transparent 2px 14px),
+        repeating-linear-gradient(90deg, rgba(234, 179, 78, 0.22) 0 2px, transparent 2px 14px);
+      background-size: 100% 3px, 100% 3px;
+      background-position: top, bottom;
+      background-repeat: no-repeat;
     }
 
-    .phone-frame.cam-live {
-      background: rgba(5, 9, 20, 0.25);
-    }
+    .device-shell.cam-live { background: transparent; }
 
-    .phone-frame.cam-live .panel,
-    .phone-frame.cam-live .route-step {
-      background: rgba(10, 18, 36, 0.72);
-      backdrop-filter: blur(6px);
-    }
+    .topbar, .viewport, .dock { position: relative; z-index: 2; }
 
-    .topbar, .content, .nav { position: relative; z-index: 2; }
-
+    /* Компактная шапка с золотым орнаментом */
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 12px 14px;
-      background: rgba(7, 13, 26, 0.9);
-      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      background: linear-gradient(180deg, rgba(6, 12, 26, 0.88), rgba(6, 12, 26, 0.62));
+      border-bottom: 1px solid rgba(234, 179, 78, 0.35);
     }
 
-    .brand { display: flex; flex-direction: column; gap: 2px; }
-    .brand-title { font-size: 13px; font-weight: 800; letter-spacing: 0.6px; color: var(--gold); }
-    .brand-sub { font-size: 11px; color: var(--muted); }
-    .top-btns { display: flex; gap: 6px; }
+    .brand-mark {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
 
+    .brand-kicker {
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .brand-name {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text);
+    }
+
+    .top-controls { display: flex; gap: 6px; }
+
+    /* Изящные кнопки без громоздких блоков */
     button {
       font-family: inherit;
       color: var(--text);
-      background: rgba(20, 34, 63, 0.92);
-      border: 1px solid var(--border);
+      background: rgba(11, 21, 43, 0.72);
+      border: 1px solid rgba(234, 179, 78, 0.45);
       border-radius: var(--r-md);
       min-height: var(--tap);
-      padding: 9px 12px;
-      font-size: 13px;
+      padding: 8px 12px;
+      font-size: 12.5px;
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1.15;
       cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
     }
 
-    button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
-    button:disabled { opacity: 0.48; cursor: not-allowed; }
+    button:active { transform: scale(0.97); }
+    button:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    .btn-gold {
-      min-height: var(--cta);
-      width: 100%;
-      font-size: 15px;
-      background: linear-gradient(135deg, #b45309, #f5c469);
-      border: 1px solid var(--gold-bright);
-      color: #070d1a;
+    .btn-ornament-gold {
+      background: linear-gradient(135deg, rgba(161, 98, 7, 0.92), rgba(234, 179, 78, 0.95));
+      border: 1px solid var(--gold-light);
+      color: #070c18;
       font-weight: 800;
+      box-shadow: 0 6px 20px rgba(234, 179, 78, 0.28);
     }
 
-    .btn-ar {
-      min-height: var(--cta);
-      width: 100%;
-      font-size: 14px;
-      background: linear-gradient(135deg, #0e7490, #2563eb);
-      border: 1px solid rgba(103, 232, 249, 0.55);
-      color: #ffffff;
-      font-weight: 800;
+    .btn-ornament-glass {
+      background: rgba(10, 20, 42, 0.64);
+      border: 1px solid rgba(253, 230, 138, 0.55);
+      color: var(--gold-light);
+      box-shadow: inset 0 0 0 1px rgba(234, 179, 78, 0.18);
     }
 
-    .content {
+    .viewport {
       flex: 1;
       overflow-y: auto;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-    }
-
-    .screen { display: none; flex-direction: column; gap: 13px; }
-    .screen.active { display: flex; }
-
-    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    .badge {
-      padding: 6px 11px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      border: 1px solid rgba(245, 196, 105, 0.35);
-      background: rgba(245, 196, 105, 0.16);
-      color: var(--gold-bright);
-    }
-
-    .badge-ok {
-      border-color: rgba(52, 211, 153, 0.45);
-      background: rgba(52, 211, 153, 0.18);
-      color: var(--ok);
-    }
-
-    h1 { font-size: 22px; line-height: 1.22; color: var(--text); }
-    h2 { font-size: 18px; line-height: 1.28; color: var(--gold-bright); }
-    p { font-size: 13.5px; line-height: 1.48; color: var(--muted); }
-
-    .panel {
-      background: rgba(12, 21, 40, 0.9);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
       padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .warn-box {
-      background: rgba(251, 191, 36, 0.14);
-      border: 1px solid rgba(251, 191, 36, 0.42);
-      border-radius: var(--r-md);
-      padding: 10px 12px;
-      font-size: 12px;
-      line-height: 1.42;
-      color: #fde68a;
-    }
+    .scene-screen { display: none; flex-direction: column; justify-content: space-between; gap: 12px; flex: 1; }
+    .scene-screen.active { display: flex; }
 
-    .ar-stage {
-      position: relative;
-      height: 310px;
+    /* Орнаментальная карточка */
+    .ornate-card {
+      background: rgba(9, 17, 36, 0.62);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(234, 179, 78, 0.42);
       border-radius: var(--r-lg);
-      border: 1px solid var(--gold);
+      padding: 13px;
+      box-shadow: inset 0 0 0 1px rgba(253, 230, 138, 0.12);
+    }
+
+    .hero-title {
+      font-size: 20px;
+      line-height: 1.22;
+      color: var(--gold-light);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+    }
+
+    .sub-copy {
+      font-size: 12.5px;
+      line-height: 1.42;
+      color: var(--muted);
+    }
+
+    /* Медальон батыра, золотой арки, каравана и шкатулки */
+    .hero-medallion {
+      position: relative;
+      border-radius: var(--r-xl);
+      border: 1.5px solid rgba(234, 179, 78, 0.62);
+      background: radial-gradient(circle at 50% 25%, rgba(234, 179, 78, 0.25), rgba(7, 13, 28, 0.78) 76%);
+      padding: 14px;
       overflow: hidden;
-      background: radial-gradient(circle at 50% 35%, rgba(245, 196, 105, 0.24), rgba(6, 11, 24, 0.92) 72%);
+      min-height: 166px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .phone-frame.cam-live .ar-stage {
-      background: transparent;
-    }
-
-    #arParticles {
+    #introVideo {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
-      z-index: 1;
-      pointer-events: none;
+      object-fit: cover;
+      display: none;
+      z-index: 0;
     }
 
-    .ar-hud {
+    #introVideo.has-video { display: block; }
+
+    .medallion-center {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin: auto 0;
+    }
+
+    .arch-motif {
+      width: 112px;
+      height: 62px;
+      margin: 0 auto 6px;
+      border-top: 3px solid var(--gold-light);
+      border-left: 3px solid var(--gold);
+      border-right: 3px solid var(--gold);
+      border-radius: 60px 60px 8px 8px;
+      box-shadow: 0 0 22px rgba(234, 179, 78, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 20px;
+      background: rgba(11, 21, 43, 0.45);
+    }
+
+    /* Пространство AR-охоты: максимум открытого вида на камеру */
+    .ar-arena {
+      position: relative;
+      flex: 1;
+      min-height: 350px;
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(234, 179, 78, 0.55);
+      overflow: hidden;
+    }
+
+    #arSparks {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ar-layer {
       position: relative;
       z-index: 2;
       height: 100%;
@@ -231,196 +276,248 @@
       justify-content: space-between;
     }
 
-    .radar-pill {
-      align-self: flex-start;
-      background: rgba(7, 13, 26, 0.85);
-      border: 1px solid rgba(103, 232, 249, 0.55);
-      color: var(--cyan);
-      padding: 6px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .gift-orb-zone {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .gift-orb-btn {
-      width: 98px;
-      height: 98px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b 65%, #78350f);
-      border: 3px solid var(--gold-bright);
-      color: #070d1a;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      box-shadow: 0 0 28px rgba(245, 196, 105, 0.6);
-      animation: pulseOrb 1.8s infinite ease-in-out;
-    }
-
-    @keyframes pulseOrb {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .gift-orb-btn { animation: none; }
-    }
-
-    .route-step {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 13px;
-      border-radius: var(--r-md);
-      background: rgba(20, 34, 63, 0.92);
-      border: 1px solid var(--border);
-    }
-
-    .route-step.done { border-color: var(--ok); }
-
-    .row {
+    .ar-pill-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
     }
 
-    .nav {
+    .gold-chip {
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(9, 17, 36, 0.72);
+      border: 1px solid rgba(234, 179, 78, 0.55);
+      color: var(--gold-light);
+      backdrop-filter: blur(6px);
+    }
+
+    .catch-zone {
+      position: relative;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* Орнаментальный AR-артефакт для захвата */
+    .ar-chest-btn {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, #fde68a, #eab34e 62%, #78350f);
+      border: 2.5px solid var(--gold-light);
+      box-shadow: 0 0 0 5px rgba(234, 179, 78, 0.22), 0 0 28px rgba(234, 179, 78, 0.65);
+      color: #070c18;
+      font-weight: 900;
+      font-size: 10.5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: left 0.45s ease, top 0.45s ease, transform 0.15s ease;
+    }
+
+    .ar-chest-btn:active { transform: translate(-50%, -50%) scale(0.92); }
+
+    .compact-caption {
+      background: rgba(8, 15, 31, 0.72);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(234, 179, 78, 0.4);
+      border-radius: var(--r-md);
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .compact-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Маршрут и подарки */
+    .route-ribbon {
+      display: flex;
+      gap: 6px;
+    }
+
+    .route-stop-pill {
+      flex: 1;
+      text-align: center;
+      padding: 7px 6px;
+      border-radius: var(--r-md);
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(9, 17, 36, 0.72);
+      border: 1px solid rgba(234, 179, 78, 0.35);
+      color: var(--muted);
+    }
+
+    .route-stop-pill.done {
+      border-color: var(--ok);
+      color: var(--ok);
+    }
+
+    .list-stack { display: flex; flex-direction: column; gap: 8px; }
+
+    .ornate-row {
+      background: rgba(9, 17, 36, 0.68);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(234, 179, 78, 0.38);
+      border-radius: var(--r-md);
+      padding: 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .ornate-row.done { border-color: rgba(52, 211, 153, 0.7); }
+
+    .row-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tiny-legal {
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: var(--gold-light);
+      opacity: 0.88;
+    }
+
+    /* Нижняя орнаментальная панель */
+    .dock {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      padding: 10px 12px;
-      background: rgba(7, 13, 26, 0.95);
-      border-top: 1px solid var(--border);
+      gap: 5px;
+      padding: 8px 10px;
+      background: rgba(6, 12, 26, 0.9);
+      border-top: 1px solid rgba(234, 179, 78, 0.4);
+      backdrop-filter: blur(10px);
     }
 
-    .nav button {
+    .dock button {
       min-height: var(--tap);
-      padding: 8px 4px;
-      font-size: 12px;
-      border-radius: 12px;
+      padding: 6px 4px;
+      font-size: 11.5px;
+      border-radius: 11px;
+      background: rgba(15, 27, 54, 0.75);
     }
 
-    .nav button.active {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-      background: rgba(245, 196, 105, 0.16);
+    .dock button.active {
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+      background: linear-gradient(180deg, rgba(234, 179, 78, 0.25), rgba(146, 64, 14, 0.25));
     }
   </style>
 </head>
 <body>
-  <div class="phone-frame" id="phoneFrame">
+  <div class="device-shell" id="deviceShell">
     <video id="arCamera" autoplay playsinline muted></video>
-    <div class="cam-overlay"></div>
+    <div class="ornament-frame"></div>
 
     <header class="topbar">
-      <div class="brand">
-        <span class="brand-title">MEGA SILK WAY • AR</span>
-        <span class="brand-sub" id="txtSubBrand">Батыр • Караван • Шкатулка</span>
+      <div class="brand-mark">
+        <span class="brand-kicker" id="txtKicker">АЛТЫН КЕРУЕН • AR</span>
+        <span class="brand-name">MEGA SILK WAY</span>
       </div>
-      <div class="top-btns">
+      <div class="top-controls">
         <button type="button" id="btnLang" onclick="toggleLang()">KZ</button>
-        <button type="button" id="btnCamTop" onclick="toggleCamera()">📷 AR</button>
+        <button type="button" id="btnSound" onclick="toggleSound()">🔇</button>
+        <button type="button" class="btn-ornament-glass" id="btnCamTop" onclick="toggleCamera()">📷 AR</button>
       </div>
     </header>
 
-    <main class="content">
-      <section class="screen active" id="screen-qr">
-        <div class="badge-row">
-          <span class="badge badge-ok" id="txtQrTag">QR-вход • Без регистрации</span>
-          <span class="badge" id="txtSceneTag">30с Сцена: Арка и Шкатулка</span>
+    <main class="viewport">
+      <!-- 1. QR / 30с -->
+      <section class="scene-screen active" id="screen-qr">
+        <div class="row-flex" style="flex-wrap: wrap;">
+          <span class="gold-chip" id="txtBadgeQr">✦ QR • БЕЗ РЕГИСТРАЦИИ</span>
+          <span class="gold-chip" id="txtBadgeTime">0 / 30 с</span>
         </div>
 
-        <h1 id="txtHeroTitle">Зимний Караван и Дар Батыра в MEGA Silk Way</h1>
-        <p id="txtHeroDesc">
-          Наведите камеру на QR-код, посмотрите 30-секундный сюжет появления золотой арки, каравана и шкатулки с подарками — затем перейдите в AR-охоту по маршруту.
-        </p>
+        <h1 class="hero-title" id="txtTitle">Дар Батыра и Зимний Караван</h1>
 
-        <div class="panel">
-          <div class="row">
-            <strong style="font-size: 14px; color: var(--gold-bright);" id="txtStoryPhaseTitle">Сценарий 0–30 с</strong>
-            <strong style="font-size: 14px; color: var(--cyan);" id="txtTimer">30 с</strong>
+        <div class="hero-medallion">
+          <video id="introVideo" playsinline controls></video>
+          <div class="medallion-center" id="medallionCenter">
+            <div class="arch-motif">⚔️🐪✨</div>
+            <strong style="font-size: 12.5px; color: var(--gold-light);" id="txtSceneBeat"></strong>
           </div>
-          <p id="txtStoryPhaseDesc" style="font-size: 13px;">
-            0–8 с: золотая арка и караван у входа MEGA Silk Way. 8–15 с: батыр протягивает шкатулку. 15–22 с: золотой свет и шёлковые ленты. 22–30 с: старт маршрута за подарками.
-          </p>
-          <button type="button" class="btn-ar" id="btnEnableCam" onclick="toggleCamera()">
-            📷 Включить камеру для AR
-          </button>
-          <p id="txtCamNote" style="font-size: 12px; color: var(--cyan);" aria-live="polite"></p>
+          <div class="row-flex" style="position: relative; z-index: 1;">
+            <span style="font-size: 11px; color: var(--muted);" id="txtVideoHint"></span>
+            <span class="gold-chip" style="padding: 3px 8px; font-size: 10px;">EXPO</span>
+          </div>
         </div>
 
-        <div class="warn-box" id="txtLegalNote">
-          Независимый демо-концепт (не официальный продукт MEGA). Маршрут по ТРЦ и подарки в демо условны и требуют согласования с ТРЦ и партнёрами.
+        <p class="sub-copy" id="txtIntroCopy"></p>
+
+        <div class="compact-actions">
+          <button type="button" class="btn-ornament-glass" id="btnCamMain" onclick="toggleCamera()">📷 Камера AR</button>
+          <button type="button" class="btn-ornament-gold" id="btnStartHunt" onclick="openScreen('hunt')">✦ Начать AR-охоту</button>
         </div>
 
-        <button type="button" class="btn-gold" id="btnGoArHunt" onclick="openScreen('hunt')">
-          Начать AR-охоту за подарками
-        </button>
+        <p id="txtCamStatus" class="sub-copy" style="font-size: 11.5px; color: var(--turquoise);" aria-live="polite"></p>
+        <p class="tiny-legal" id="txtLegal"></p>
       </section>
 
-      <section class="screen" id="screen-hunt">
-        <div class="row">
-          <h2 id="txtHuntTitle">AR-поиск подарков</h2>
-          <span class="badge" id="txtScoreBadge">0 / 3 • 0 б.</span>
-        </div>
+      <!-- 2. AR-охота поверх камеры -->
+      <section class="scene-screen" id="screen-hunt">
+        <div class="ar-arena">
+          <canvas id="arSparks"></canvas>
+          <div class="ar-layer">
+            <div class="ar-pill-row">
+              <span class="gold-chip" id="txtRadar">🧭 EXPO</span>
+              <span class="gold-chip" id="txtScore">0 / 3 • 0 б.</span>
+            </div>
 
-        <div class="ar-stage" id="arStage">
-          <canvas id="arParticles"></canvas>
-          <div class="ar-hud">
-            <span class="radar-pill" id="txtRadarHint">Наведите на золотую шкатулку / дар и нажмите «Забрать»</span>
-
-            <div class="gift-orb-zone" id="orbContainer">
-              <button type="button" class="gift-orb-btn" id="btnCatchOrb" onclick="catchCurrentTarget()">
-                <span style="font-size: 18px;">🎁</span>
-                <span id="txtCatchLabel">ЗАБРАТЬ</span>
+            <div class="catch-zone">
+              <button type="button" class="ar-chest-btn" id="btnCatch" style="left: 50%; top: 52%;" onclick="catchGift()">
+                <span style="font-size: 19px;">🧰</span>
+                <span id="txtCatch">ЗАБРАТЬ</span>
               </button>
-              <span class="badge" id="txtCurrentTargetLabel" style="background: rgba(7,13,26,0.88);"></span>
             </div>
 
-            <div class="panel" style="padding: 10px 12px; background: rgba(7,13,26,0.88);">
-              <p id="txtArFeedback" style="font-size: 12.5px; color: var(--gold-bright);" aria-live="polite"></p>
+            <div class="compact-caption">
+              <strong style="font-size: 12px; color: var(--gold-light);" id="txtCurrentGift"></strong>
+              <span style="font-size: 11.5px; color: var(--muted);" id="txtCurrentStep" aria-live="polite"></span>
             </div>
           </div>
         </div>
 
-        <button type="button" class="btn-ar" id="btnHuntToRoute" onclick="openScreen('route')">
-          Открыть проложенный маршрут по ТРЦ →
-        </button>
+        <div class="compact-actions">
+          <button type="button" class="btn-ornament-glass" id="btnShift" onclick="shiftChest()">✦ Сдвинуть метку</button>
+          <button type="button" class="btn-ornament-gold" id="btnToRoute" onclick="openScreen('route')">Маршрут →</button>
+        </div>
       </section>
 
-      <section class="screen" id="screen-route">
-        <h2 id="txtRouteTitle">Проложенный маршрут в ТРЦ</h2>
-        <div class="warn-box" id="txtRouteWarn">
-          Условная демо-схема маршрута для проверки игры. Не является официальным планом этажей MEGA Silk Way.
-        </div>
-        <div id="routeList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      <!-- 3. Маршрут -->
+      <section class="scene-screen" id="screen-route" style="justify-content: flex-start;">
+        <h2 class="hero-title" style="font-size: 18px;" id="txtRouteHeading">Маршрут по ТРЦ</h2>
+        <div class="route-ribbon" id="routeRibbon"></div>
+        <div class="list-stack" id="routeCards"></div>
+        <p class="tiny-legal" id="txtRouteNote"></p>
       </section>
 
-      <section class="screen" id="screen-gifts">
-        <h2 id="txtGiftsTitle">Спрятанные подарки</h2>
-        <div class="panel">
-          <div class="row">
-            <span id="txtGiftsPtsLabel">Накоплено демо-баллов:</span>
-            <strong id="txtGiftsPtsVal" style="color: var(--gold); font-size: 17px;">0</strong>
-          </div>
-          <p id="txtGiftsSummary" style="font-size: 12.5px;" aria-live="polite"></p>
+      <!-- 4. Подарки -->
+      <section class="scene-screen" id="screen-gifts" style="justify-content: flex-start;">
+        <div class="ornate-card row-flex">
+          <span style="font-size: 13px; color: var(--muted);" id="txtPtsLabel">Демо-баллы:</span>
+          <strong style="font-size: 18px; color: var(--gold-light);" id="txtPtsVal">0</strong>
         </div>
-        <div id="giftsList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        <div class="list-stack" id="giftCards"></div>
+        <p class="tiny-legal" id="txtGiftsNote"></p>
       </section>
     </main>
 
-    <nav class="nav" aria-label="Навигация">
+    <nav class="dock" aria-label="Навигация">
       <button type="button" id="nav-qr" class="active" onclick="openScreen('qr')">QR / 30с</button>
       <button type="button" id="nav-hunt" onclick="openScreen('hunt')">AR-Охота</button>
       <button type="button" id="nav-route" onclick="openScreen('route')">Маршрут</button>
@@ -433,142 +530,176 @@
       screen: 'qr',
       lang: 'ru',
       camOn: false,
-      camStatusKey: 'camOff',
+      camKey: 'camOff',
       stream: null,
-      sec: 30,
+      soundOn: false,
+      audioCtx: null,
+      sec: 0,
       timerId: null,
       animId: null,
+      moveId: null,
+      spotIdx: 0,
       points: 0,
-      targets: [
+      items: [
         {
           id: 1,
-          ruStep: 'Шаг 1 • Вход со стороны EXPO (Золотая арка)',
-          kzStep: '1-қадам • EXPO жағындағы кіреберіс (Алтын арка)',
-          ruGift: 'Шкатулка Батыра • 50 демо-баллов',
-          kzGift: 'Батыр Сандығы • 50 демо-ұпай',
-          pts: 50,
-          caught: false
+          ruZone: 'EXPO', kzZone: 'EXPO',
+          ruStep: 'Точка 1 • Вход EXPO (Золотая арка)', kzStep: '1-нүкте • EXPO кіреберісі (Алтын арка)',
+          ruGift: 'Шкатулка Батыра • 50 б.', kzGift: 'Батыр Сандығы • 50 ұ.',
+          pts: 50, found: false
         },
         {
           id: 2,
-          ruStep: 'Шаг 2 → Центральный атриум (След каравана)',
-          kzStep: '2-қадам → Орталық атриум (Керуен ізі)',
-          ruGift: 'Шёлковый Дар Каравана • 75 демо-баллов',
-          kzGift: 'Керуеннің Жібек Сыйы • 75 демо-ұпай',
-          pts: 75,
-          caught: false
+          ruZone: 'Атриум', kzZone: 'Атриум',
+          ruStep: 'Точка 2 → Центральный атриум', kzStep: '2-нүкте → Орталық атриум',
+          ruGift: 'Шёлковый Дар Каравана • 75 б.', kzGift: 'Керуеннің Жібек Сыйы • 75 ұ.',
+          pts: 75, found: false
         },
         {
           id: 3,
-          ruStep: 'Шаг 3 → Семейная галерея (Сундук подарков)',
-          kzStep: '3-қадам → Отбасылық галерея (Сыйлық сандығы)',
-          ruGift: 'Золотой Дар MEGA Silk Way • 100 демо-баллов',
-          kzGift: 'MEGA Silk Way Алтын Сыйы • 100 демо-ұпай',
-          pts: 100,
-          caught: false
+          ruZone: 'Галерея', kzZone: 'Галерея',
+          ruStep: 'Точка 3 → Семейная галерея', kzStep: '3-нүкте → Отбасылық галерея',
+          ruGift: 'Золотой Сундук MEGA • 100 б.', kzGift: 'MEGA Алтын Сандығы • 100 ұ.',
+          pts: 100, found: false
         }
       ]
     };
 
-    const i18n = {
+    const spots = [
+      { left: '26%', top: '36%' },
+      { left: '74%', top: '34%' },
+      { left: '50%', top: '60%' },
+      { left: '30%', top: '64%' }
+    ];
+
+    const dict = {
       ru: {
-        txtSubBrand: 'Батыр • Караван • Шкатулка',
+        txtKicker: 'АЛТЫН КЕРУЕН • AR',
         btnLang: 'KZ',
         camTopOff: '📷 AR',
         camTopOn: '📷 Вкл',
-        txtQrTag: 'QR-вход • Без регистрации',
-        txtSceneTag: '30с Сцена: Арка и Шкатулка',
-        txtHeroTitle: 'Зимний Караван и Дар Батыра в MEGA Silk Way',
-        txtHeroDesc: 'Наведите камеру на QR-код, посмотрите 30-секундный сюжет появления золотой арки, каравана и шкатулки с подарками — затем перейдите в AR-охоту по маршруту.',
-        txtStoryPhaseTitle: 'Сценарий 0–30 с',
-        txtStoryPhaseDesc: '0–8 с: золотая арка и караван у входа MEGA Silk Way. 8–15 с: батыр протягивает шкатулку. 15–22 с: золотой свет и шёлковые ленты. 22–30 с: старт маршрута за подарками.',
-        btnEnableCam: '📷 Включить камеру для AR',
-        btnDisableCam: '📷 Выключить камеру',
-        camOff: 'Камера выключена — AR-сфера работает в демо-режиме без камеры.',
-        camOn: 'Камера включена — AR-метки отображаются поверх живого видео.',
-        camErr: 'Камера не запустилась (разрешите доступ к камере в браузере) — работает режим без камеры.',
-        txtLegalNote: 'Независимый демо-концепт (не официальный продукт MEGA). Маршрут по ТРЦ и подарки в демо условны и требуют согласования с ТРЦ и партнёрами.',
-        btnGoArHunt: 'Начать AR-охоту за подарками',
-        txtHuntTitle: 'AR-поиск подарков',
-        txtRadarHint: 'Наведите на золотой шар/шкатулку и нажмите «Забрать»',
-        txtCatchLabel: 'ЗАБРАТЬ',
-        allCaught: 'Все 3 подарка в AR собраны! Откройте маршрут или раздел «Подарки».',
-        btnHuntToRoute: 'Открыть проложенный маршрут по ТРЦ →',
-        txtRouteTitle: 'Проложенный маршрут в ТРЦ',
-        txtRouteWarn: 'Условная демо-схема маршрута для проверки игры. Не является официальным планом этажей MEGA Silk Way.',
-        goCatchBtn: 'Найти в AR-охоте',
-        doneBtn: '✓ Подарок найден',
-        txtGiftsTitle: 'Спрятанные подарки',
-        txtGiftsPtsLabel: 'Накоплено демо-баллов:',
-        giftsNote: 'Демо-статус: баллы и подарки созданы для проверки игрового сценария и требуют согласования при коммерческом запуске.',
-        giftLocked: 'Ещё не найден — откройте «AR-Охоту» или «Маршрут»',
-        giftCaught: '✓ Найден в AR-игре (демо-статус)',
-        navQr: 'QR / 30с',
-        navHunt: 'AR-Охота',
-        navRoute: 'Маршрут',
-        navGifts: 'Подарки'
+        txtBadgeQr: '✦ QR • БЕЗ РЕГИСТРАЦИИ',
+        txtTitle: 'Дар Батыра и Зимний Караван',
+        txtVideoHint: 'Автозапуск intro.mp4 при загрузке',
+        txtIntroCopy: 'Золотая арка, караван и шкатулка у MEGA Silk Way — затем поиск скрытых подарков в AR поверх камеры.',
+        btnCamMain: '📷 Камера AR',
+        btnCamOff: '📷 Выкл камеру',
+        btnStartHunt: '✦ Начать AR-охоту',
+        camOff: 'Камера выключена — AR-шкатулка доступна сразу.',
+        camOn: 'Камера активна — золотая шкатулка поверх видео.',
+        camErr: 'Камера недоступна — работает режим без камеры.',
+        txtLegal: 'Независимый демо-концепт (не официальный продукт MEGA Silk Way). Схема, подарки и баллы условны и требуют согласования.',
+        txtCatch: 'ЗАБРАТЬ',
+        btnShift: '✦ Сдвинуть метку',
+        btnToRoute: 'Маршрут →',
+        doneAll: 'Все 3 подарка собраны! Откройте «Маршрут» или «Подарки».',
+        txtRouteHeading: 'Маршрут по ТРЦ',
+        txtRouteNote: 'Условная демо-схема для проверки сценария (не официальный план MEGA Silk Way).',
+        goHunt: 'Найти в AR',
+        caughtState: '✓ Получено',
+        txtPtsLabel: 'Демо-баллы:',
+        giftsLocked: 'Ещё не открыто — найдите в «AR-Охоте»',
+        giftsUnlocked: '✓ Открыто в демо-сессии',
+        txtGiftsNote: 'Демо-статус: баллы и подарки тестовые и требуют согласования при запуске.',
+        navQr: 'QR / 30с', navHunt: 'AR-Охота', navRoute: 'Маршрут', navGifts: 'Подарки',
+        beats: [
+          '0–8 с • Золотая арка и караван у входа',
+          '8–15 с • Батыр протягивает шкатулку',
+          '15–22 с • Золотой свет и шёлковые ленты',
+          '22–30 с • Старт маршрута за подарками'
+        ]
       },
       kz: {
-        txtSubBrand: 'Батыр • Керуен • Сандық',
+        txtKicker: 'АЛТЫН КЕРУЕН • AR',
         btnLang: 'RU',
         camTopOff: '📷 AR',
         camTopOn: '📷 Қосулы',
-        txtQrTag: 'QR-кіру • Тіркеусіз',
-        txtSceneTag: '30с Сахна: Арка және Сандық',
-        txtHeroTitle: 'MEGA Silk Way-дегі Қысқы Керуен және Батыр Сыйы',
-        txtHeroDesc: 'Камераны QR-кодқа бағыттаңыз, алтын арка, керуен және сыйлық сандығы шығатын 30 секундтық көріністі қараңыз — содан кейін маршрутпен AR-ойынға өтіңіз.',
-        txtStoryPhaseTitle: '0–30 с сценарийі',
-        txtStoryPhaseDesc: '0–8 с: MEGA Silk Way кіреберісінде алтын арка мен керуен. 8–15 с: батыр сандықты ұсынады. 15–22 с: алтын жарық пен жібек ленталар. 22–30 с: сыйлық маршруты.',
-        btnEnableCam: '📷 AR үшін камераны қосу',
-        btnDisableCam: '📷 Камераны өшіру',
-        camOff: 'Камера өшірулі — AR-элемент камерасыз демо-режимде тұр.',
-        camOn: 'Камера қосулы — AR-белгілер тірі бейне үстінде көрінеді.',
-        camErr: 'Камера іске қосылмады (браузерде камераға рұқсат беріңіз) — камерасыз режим жұмыс істейді.',
-        txtLegalNote: 'Тәуелсіз демо-концепт (MEGA-ның ресми өнімі емес). СОО маршруты мен сыйлықтар шартты және келісуді қажет етеді.',
-        btnGoArHunt: 'Сыйлықтарға AR-аңшылықты бастау',
-        txtHuntTitle: 'AR-сыйлық іздеу',
-        txtRadarHint: 'Алтын белгіге бағыттап, «Алу» түймесін басыңыз',
-        txtCatchLabel: 'АЛУ',
-        allCaught: 'Барлық 3 AR-сыйлық жиналды! Маршрутты немесе «Сыйлықтар» бөлімін ашыңыз.',
-        btnHuntToRoute: 'СОО бойынша маршрутты ашу →',
-        txtRouteTitle: 'СОО ішіндегі маршрут',
-        txtRouteWarn: 'Ойынды тексеруге арналған шартты демо-схема. MEGA Silk Way-дің ресми жоспары емес.',
-        goCatchBtn: 'AR-ойында табу',
-        doneBtn: '✓ Сыйлық табылды',
-        txtGiftsTitle: 'Жасырылған сыйлықтар',
-        txtGiftsPtsLabel: 'Жиналған демо-ұпайлар:',
-        giftsNote: 'Демо-мәртебе: ұпайлар мен сыйлықтар ойын сценарийін тексеруге арналған және келісуді қажет етеді.',
-        giftLocked: 'Әлі табылмаған — «AR-Ойын» немесе «Маршрутты» ашыңыз',
-        giftCaught: '✓ AR-ойында табылды (демо-мәртебе)',
-        navQr: 'QR / 30с',
-        navHunt: 'AR-Ойын',
-        navRoute: 'Маршрут',
-        navGifts: 'Сыйлықтар'
+        txtBadgeQr: '✦ QR • ТІРКЕУСІЗ',
+        txtTitle: 'Батыр Сыйы және Қысқы Керуен',
+        txtVideoHint: 'intro.mp4 жүктелсе — автоматты қосылады',
+        txtIntroCopy: 'MEGA Silk Way жанында алтын арка, керуен және сандық — кейін камера үстінде AR-сыйлық іздеу.',
+        btnCamMain: '📷 AR Камера',
+        btnCamOff: '📷 Өшіру',
+        btnStartHunt: '✦ AR-аңшылықты бастау',
+        camOff: 'Камера өшірулі — AR-сандық қолжетімді.',
+        camOn: 'Камера қосулы — алтын сандық бейне үстінде.',
+        camErr: 'Камера қолжетімсіз — камерасыз режим жұмыс істейді.',
+        txtLegal: 'Тәуелсіз демо-концепт (MEGA Silk Way ресми өнімі емес). Схема, сыйлықтар мен ұпайлар шартты және келісуді қажет етеді.',
+        txtCatch: 'АЛУ',
+        btnShift: '✦ Белгіні жылжыту',
+        btnToRoute: 'Маршрут →',
+        doneAll: 'Барлық 3 сыйлық алынды! «Маршрут» немесе «Сыйлықтар» бөлімін ашыңыз.',
+        txtRouteHeading: 'СОО бойынша маршрут',
+        txtRouteNote: 'Сценарийді тексеруге арналған шартты демо-схема (MEGA Silk Way ресми жоспары емес).',
+        goHunt: 'AR-да табу',
+        caughtState: '✓ Алынды',
+        txtPtsLabel: 'Демо-ұпайлар:',
+        giftsLocked: 'Әлі алынбаған — «AR-Ойын» бөлімін ашыңыз',
+        giftsUnlocked: '✓ Демо-сессияда алынды',
+        txtGiftsNote: 'Демо-мәртебе: ұпайлар мен сыйлықтар тесттік және келісуді қажет етеді.',
+        navQr: 'QR / 30с', navHunt: 'AR-Ойын', navRoute: 'Маршрут', navGifts: 'Сыйлықтар',
+        beats: [
+          '0–8 с • Кіреберісте алтын арка мен керуен',
+          '8–15 с • Батыр сандықты ұсынады',
+          '15–22 с • Алтын жарық және жібек ленталар',
+          '22–30 с • Сыйлықтар маршрутының басталуы'
+        ]
       }
     };
 
-    const sparks = Array.from({ length: 42 }, (_, i) => ({
-      x: (i * 43) % 400,
-      y: (i * 29) % 310,
-      r: 1.4 + (i % 3),
-      vy: 0.5 + (i % 3) * 0.35
+    function chime(freq = 659.25) {
+      if (!state.soundOn) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!state.audioCtx) state.audioCtx = new AudioCtx();
+      if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+      const now = state.audioCtx.currentTime;
+      const osc = state.audioCtx.createOscillator();
+      const gain = state.audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.045, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+      osc.connect(gain);
+      gain.connect(state.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.26);
+    }
+
+    function toggleSound() {
+      state.soundOn = !state.soundOn;
+      if (state.soundOn) chime(523.25);
+      render();
+    }
+
+    function toggleLang() {
+      state.lang = state.lang === 'ru' ? 'kz' : 'ru';
+      render();
+    }
+
+    const sparks = Array.from({ length: 30 }, (_, i) => ({
+      x: (i * 53) % 390,
+      y: (i * 37) % 340,
+      r: 1.3 + (i % 2.5),
+      vy: 0.4 + (i % 3) * 0.25
     }));
 
     function drawSparks() {
-      const canvas = document.getElementById('arParticles');
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+      const c = document.getElementById('arSparks');
+      if (!c) return;
+      const rect = c.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-      if (canvas.width !== Math.round(rect.width) || canvas.height !== Math.round(rect.height)) {
-        canvas.width = Math.round(rect.width);
-        canvas.height = Math.round(rect.height);
+      if (c.width !== Math.round(rect.width) || c.height !== Math.round(rect.height)) {
+        c.width = Math.round(rect.width);
+        c.height = Math.round(rect.height);
       }
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(253, 230, 138, 0.85)';
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.fillStyle = 'rgba(253, 230, 138, 0.8)';
       sparks.forEach(p => {
         p.y -= p.vy;
-        if (p.y < -4) p.y = canvas.height + 4;
+        if (p.y < -4) p.y = c.height + 4;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
@@ -576,23 +707,39 @@
       state.animId = requestAnimationFrame(drawSparks);
     }
 
+    function checkVideo() {
+      const vid = document.getElementById('introVideo');
+      const center = document.getElementById('medallionCenter');
+      if (!vid) return;
+      vid.src = 'intro.mp4';
+      vid.onloadeddata = () => {
+        vid.classList.add('has-video');
+        center.style.opacity = '0';
+        vid.play().catch(() => {});
+      };
+      vid.onerror = () => {
+        vid.classList.remove('has-video');
+        center.style.opacity = '1';
+      };
+    }
+
     async function toggleCamera() {
       const video = document.getElementById('arCamera');
-      const frame = document.getElementById('phoneFrame');
+      const shell = document.getElementById('deviceShell');
       if (state.camOn) {
         if (state.stream) {
           state.stream.getTracks().forEach(t => t.stop());
           state.stream = null;
         }
         video.classList.remove('active');
-        frame.classList.remove('cam-live');
+        shell.classList.remove('cam-live');
         state.camOn = false;
-        state.camStatusKey = 'camOff';
+        state.camKey = 'camOff';
         render();
         return;
       }
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        state.camStatusKey = 'camErr';
+        state.camKey = 'camErr';
         render();
         return;
       }
@@ -604,51 +751,56 @@
         state.stream = stream;
         video.srcObject = stream;
         video.classList.add('active');
-        frame.classList.add('cam-live');
+        shell.classList.add('cam-live');
         state.camOn = true;
-        state.camStatusKey = 'camOn';
+        state.camKey = 'camOn';
       } catch (e) {
         state.camOn = false;
-        state.camStatusKey = 'camErr';
+        state.camKey = 'camErr';
       }
       render();
     }
 
-    function toggleLang() {
-      state.lang = state.lang === 'ru' ? 'kz' : 'ru';
-      render();
+    function shiftChest() {
+      state.spotIdx = (state.spotIdx + 1) % spots.length;
+      const btn = document.getElementById('btnCatch');
+      if (btn) {
+        btn.style.left = spots[state.spotIdx].left;
+        btn.style.top = spots[state.spotIdx].top;
+      }
+      chime(440);
     }
 
     function openScreen(name) {
       state.screen = name;
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.scene-screen').forEach(el => el.classList.remove('active'));
       document.getElementById('screen-' + name).classList.add('active');
-      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.dock button').forEach(b => b.classList.remove('active'));
       document.getElementById('nav-' + name).classList.add('active');
 
       if (name === 'hunt') {
         if (!state.animId) drawSparks();
-      } else if (state.animId) {
-        cancelAnimationFrame(state.animId);
-        state.animId = null;
+        if (!state.moveId) {
+          state.moveId = setInterval(() => {
+            if (nextItem()) shiftChest();
+          }, 2800);
+        }
+      } else {
+        if (state.animId) { cancelAnimationFrame(state.animId); state.animId = null; }
+        if (state.moveId) { clearInterval(state.moveId); state.moveId = null; }
       }
 
-      if (name === 'qr') startTimer();
+      if (name === 'qr') runTimer();
       else stopTimer();
 
       render();
     }
 
-    function startTimer() {
+    function runTimer() {
       stopTimer();
-      state.sec = 30;
       state.timerId = setInterval(() => {
-        if (state.sec > 0) {
-          state.sec -= 1;
-          document.getElementById('txtTimer').textContent = `${state.sec} с`;
-        } else {
-          stopTimer();
-        }
+        state.sec = (state.sec + 1) % 31;
+        render();
       }, 1000);
     }
 
@@ -656,90 +808,108 @@
       if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
     }
 
-    function nextTarget() {
-      return state.targets.find(t => !t.caught) || null;
+    function nextItem() {
+      return state.items.find(it => !it.found) || null;
     }
 
-    function catchCurrentTarget() {
-      const target = nextTarget();
-      if (!target) return;
-      target.caught = true;
-      state.points += target.pts;
+    function catchGift() {
+      const it = nextItem();
+      if (!it) return;
+      it.found = true;
+      state.points += it.pts;
+      chime(783.99);
+      shiftChest();
       render();
     }
 
     function render() {
-      const c = i18n[state.lang];
+      const d = dict[state.lang];
       document.documentElement.lang = state.lang;
-      document.getElementById('btnLang').textContent = c.btnLang;
-      document.getElementById('btnCamTop').textContent = state.camOn ? c.camTopOn : c.camTopOff;
-      document.getElementById('btnEnableCam').textContent = state.camOn ? c.btnDisableCam : c.btnEnableCam;
-      document.getElementById('txtCamNote').textContent = c[state.camStatusKey];
+      document.getElementById('btnLang').textContent = d.btnLang;
+      document.getElementById('btnSound').textContent = state.soundOn ? '🔊' : '🔇';
+      document.getElementById('btnCamTop').textContent = state.camOn ? d.camTopOn : d.camTopOff;
+      document.getElementById('btnCamMain').textContent = state.camOn ? d.btnCamOff : d.btnCamMain;
+      document.getElementById('txtCamStatus').textContent = d[state.camKey];
+      document.getElementById('txtBadgeTime').textContent = `${state.sec} / 30 с`;
 
-      ['txtSubBrand','txtQrTag','txtSceneTag','txtHeroTitle','txtHeroDesc','txtStoryPhaseTitle','txtStoryPhaseDesc','txtLegalNote','btnGoArHunt','txtHuntTitle','txtRadarHint','txtCatchLabel','btnHuntToRoute','txtRouteTitle','txtRouteWarn','txtGiftsTitle','txtGiftsPtsLabel'].forEach(id => {
-        document.getElementById(id).textContent = c[id];
+      const beatIdx = state.sec < 8 ? 0 : (state.sec < 15 ? 1 : (state.sec < 22 ? 2 : 3));
+      document.getElementById('txtSceneBeat').textContent = d.beats[beatIdx];
+
+      ['txtKicker','txtBadgeQr','txtTitle','txtVideoHint','txtIntroCopy','btnStartHunt','txtLegal','txtCatch','btnShift','btnToRoute','txtRouteHeading','txtRouteNote','txtPtsLabel','txtGiftsNote'].forEach(id => {
+        document.getElementById(id).textContent = d[id];
       });
 
       ['nav-qr','nav-hunt','nav-route','nav-gifts'].forEach(id => {
         const key = { 'nav-qr':'navQr', 'nav-hunt':'navHunt', 'nav-route':'navRoute', 'nav-gifts':'navGifts' }[id];
-        document.getElementById(id).textContent = c[key];
+        document.getElementById(id).textContent = d[key];
       });
 
-      const caughtCount = state.targets.filter(t => t.caught).length;
-      document.getElementById('txtScoreBadge').textContent = `${caughtCount} / ${state.targets.length} • ${state.points} б.`;
+      const foundCnt = state.items.filter(i => i.found).length;
+      document.getElementById('txtScore').textContent = `${foundCnt} / ${state.items.length} • ${state.points} б.`;
 
-      const current = nextTarget();
-      const orbZone = document.getElementById('orbContainer');
-      if (current) {
-        orbZone.style.display = 'flex';
-        document.getElementById('txtCurrentTargetLabel').textContent = state.lang === 'ru' ? current.ruGift : current.kzGift;
-        document.getElementById('txtArFeedback').textContent = state.lang === 'ru' ? current.ruStep : current.kzStep;
+      const cur = nextItem();
+      const catchBtn = document.getElementById('btnCatch');
+      if (cur) {
+        catchBtn.style.display = 'flex';
+        document.getElementById('txtRadar').textContent = `🧭 ${state.lang === 'ru' ? cur.ruZone : cur.kzZone}`;
+        document.getElementById('txtCurrentGift').textContent = state.lang === 'ru' ? cur.ruGift : cur.kzGift;
+        document.getElementById('txtCurrentStep').textContent = state.lang === 'ru' ? cur.ruStep : cur.kzStep;
       } else {
-        orbZone.style.display = 'none';
-        document.getElementById('txtArFeedback').textContent = c.allCaught;
+        catchBtn.style.display = 'none';
+        document.getElementById('txtRadar').textContent = '✦ 3 / 3';
+        document.getElementById('txtCurrentGift').textContent = d.doneAll;
+        document.getElementById('txtCurrentStep').textContent = '';
       }
 
-      const routeEl = document.getElementById('routeList');
-      routeEl.innerHTML = '';
-      state.targets.forEach(t => {
-        const div = document.createElement('div');
-        div.className = 'route-step' + (t.caught ? ' done' : '');
-        div.innerHTML = `
-          <div class="row">
-            <strong style="font-size:13.5px;">${state.lang === 'ru' ? t.ruStep : t.kzStep}</strong>
-            <span style="font-size:12px;color:var(--gold);font-weight:800;">+${t.pts}</span>
+      const ribbon = document.getElementById('routeRibbon');
+      ribbon.innerHTML = '';
+      state.items.forEach((it, idx) => {
+        const el = document.createElement('div');
+        el.className = 'route-stop-pill' + (it.found ? ' done' : '');
+        el.textContent = `${idx + 1}. ${state.lang === 'ru' ? it.ruZone : it.kzZone}`;
+        ribbon.appendChild(el);
+      });
+
+      const routeCards = document.getElementById('routeCards');
+      routeCards.innerHTML = '';
+      state.items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'ornate-row' + (it.found ? ' done' : '');
+        row.innerHTML = `
+          <div class="row-flex">
+            <strong style="font-size:12.5px;">${state.lang === 'ru' ? it.ruStep : it.kzStep}</strong>
+            <span style="font-size:12px;color:var(--gold-light);font-weight:800;">+${it.pts}</span>
           </div>
-          <span style="font-size:12.5px;color:var(--cyan);">${state.lang === 'ru' ? t.ruGift : t.kzGift}</span>
+          <span style="font-size:11.5px;color:var(--turquoise);">${state.lang === 'ru' ? it.ruGift : it.kzGift}</span>
         `;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.disabled = t.caught;
-        btn.textContent = t.caught ? c.doneBtn : c.goCatchBtn;
+        btn.disabled = it.found;
+        btn.textContent = it.found ? d.caughtState : d.goHunt;
         btn.onclick = () => openScreen('hunt');
-        div.appendChild(btn);
-        routeEl.appendChild(div);
+        row.appendChild(btn);
+        routeCards.appendChild(row);
       });
 
-      document.getElementById('txtGiftsPtsVal').textContent = state.points;
-      document.getElementById('txtGiftsSummary').textContent = c.giftsNote;
-
-      const giftsEl = document.getElementById('giftsList');
-      giftsEl.innerHTML = '';
-      state.targets.forEach(t => {
+      document.getElementById('txtPtsVal').textContent = state.points;
+      const giftCards = document.getElementById('giftCards');
+      giftCards.innerHTML = '';
+      state.items.forEach(it => {
         const card = document.createElement('div');
-        card.className = 'route-step' + (t.caught ? ' done' : '');
+        card.className = 'ornate-row' + (it.found ? ' done' : '');
         card.innerHTML = `
-          <div class="row">
-            <strong style="font-size:13.5px;">${state.lang === 'ru' ? t.ruGift : t.kzGift}</strong>
-            <span style="font-size:12px;color:var(--gold);font-weight:800;">+${t.pts}</span>
+          <div class="row-flex">
+            <strong style="font-size:12.5px;">${state.lang === 'ru' ? it.ruGift : it.kzGift}</strong>
+            <span style="font-size:12px;color:var(--gold-light);font-weight:800;">+${it.pts}</span>
           </div>
-          <span style="font-size:12px;color:${t.caught ? 'var(--ok)' : 'var(--muted)'};">${t.caught ? c.giftCaught : c.giftLocked}</span>
+          <span style="font-size:11.5px;color:${it.found ? 'var(--ok)' : 'var(--muted)'};">${it.found ? d.giftsUnlocked : d.giftsLocked}</span>
         `;
-        giftsEl.appendChild(card);
+        giftCards.appendChild(card);
       });
     }
 
-    startTimer();
+    checkVideo();
+    runTimer();
     render();
   </script>
 </body>
