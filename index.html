@@ -3,214 +3,223 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>MEGA Silk Way • Golden Ornament AR</title>
+  <title>Алтын Керуен • MEGA Silk Way</title>
   <style>
     :root {
-      --bg: #050a17;
-      --velvet: #0b152b;
-      --velvet-2: #122140;
-      --text: #fbf7ee;
-      --muted: #d6cebe;
-      --gold: #eab34e;
-      --gold-light: #fde68a;
-      --gold-dark: #8a5a14;
+      --bg-deep: #050b1a;
+      --bg-navy: #0a1630;
+      --gold-1: #fff0b8;
+      --gold-2: #f4c25b;
+      --gold-3: #b97a19;
       --turquoise: #2dd4bf;
-      --ok: #34d399;
+      --emerald: #34d399;
+      --ink: #fdf9ef;
+      --ink-soft: #e2d9c3;
+      --glass: rgba(7, 15, 34, 0.52);
+      --glass-strong: rgba(7, 15, 34, 0.78);
       --tap: 48px;
-      --r-xl: 24px;
-      --r-lg: 18px;
-      --r-md: 12px;
+      --r-pill: 999px;
+      --r-card: 20px;
+      --r-btn: 16px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-    body {
-      min-height: 100dvh;
-      background: radial-gradient(circle at 50% 0%, #1a2e5a 0%, var(--bg) 74%);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    html, body {
+      height: 100%;
+      background: radial-gradient(circle at 50% 10%, #192f5e 0%, var(--bg-deep) 72%);
+      color: var(--ink);
+      font-family: "Georgia", "Times New Roman", serif;
       display: flex;
       justify-content: center;
-      align-items: stretch;
-    }
-
-    .device-shell {
-      width: 100%;
-      max-width: 440px;
-      min-height: 100dvh;
-      background: var(--velvet);
-      border-inline: 1px solid rgba(234, 179, 78, 0.35);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
+      align-items: center;
       overflow: hidden;
     }
 
-    @media (min-width: 520px) {
-      body { padding: 18px; align-items: center; }
-      .device-shell {
-        min-height: 780px;
-        max-height: 920px;
-        border: 1.5px solid rgba(234, 179, 78, 0.45);
+    .ui-sans {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      height: 100dvh;
+      max-height: 920px;
+      background: var(--bg-deep);
+      overflow: hidden;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.75);
+    }
+
+    @media (min-width: 480px) {
+      .app-shell {
+        height: min(860px, 96dvh);
         border-radius: 30px;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.68);
+        border: 1.5px solid rgba(244, 194, 91, 0.55);
       }
     }
 
-    /* Живая камера */
-    #arCamera {
+    /* Живая камера за сценой */
+    #cameraFeed {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: none;
-      z-index: 0;
+      z-index: 1;
+    }
+    #cameraFeed.live { display: block; }
+
+    /* Художественный фон и интерьер MEGA Silk Way */
+    .stage-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+    .app-shell.cam-active .stage-bg.interior-bg {
+      opacity: 0.24;
     }
 
-    #arCamera.active { display: block; }
-
-    /* Тонкий золотой орнаментальный узор по краям экрана */
-    .ornament-frame {
+    /* Золотой орнаментальный кант */
+    .gold-border {
       position: absolute;
       inset: 8px;
-      z-index: 1;
-      pointer-events: none;
       border-radius: 22px;
-      border: 1px solid rgba(234, 179, 78, 0.42);
-      background-image:
-        repeating-linear-gradient(90deg, rgba(234, 179, 78, 0.22) 0 2px, transparent 2px 14px),
-        repeating-linear-gradient(90deg, rgba(234, 179, 78, 0.22) 0 2px, transparent 2px 14px);
-      background-size: 100% 3px, 100% 3px;
-      background-position: top, bottom;
-      background-repeat: no-repeat;
+      border: 1px solid rgba(244, 194, 91, 0.42);
+      pointer-events: none;
+      z-index: 4;
     }
 
-    .device-shell.cam-live { background: transparent; }
-
-    .topbar, .viewport, .dock { position: relative; z-index: 2; }
-
-    /* Компактная шапка с золотым орнаментом */
+    /* Верхняя компактная панель */
     .topbar {
+      position: relative;
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
       padding: 10px 14px;
-      background: linear-gradient(180deg, rgba(6, 12, 26, 0.88), rgba(6, 12, 26, 0.62));
-      border-bottom: 1px solid rgba(234, 179, 78, 0.35);
+      background: linear-gradient(180deg, rgba(5, 11, 26, 0.84) 0%, rgba(5, 11, 26, 0.1) 100%);
     }
 
-    .brand-mark {
+    .brand-lockup {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      line-height: 1.1;
     }
-
-    .brand-kicker {
+    .brand-crown {
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      color: var(--gold-2);
+      font-weight: 700;
+    }
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+    .brand-sub {
       font-size: 10px;
       letter-spacing: 1.4px;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      font-weight: 700;
+      color: var(--gold-1);
+      opacity: 0.9;
     }
 
-    .brand-name {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text);
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .top-controls { display: flex; gap: 6px; }
-
-    /* Изящные кнопки без громоздких блоков */
-    button {
-      font-family: inherit;
-      color: var(--text);
-      background: rgba(11, 21, 43, 0.72);
-      border: 1px solid rgba(234, 179, 78, 0.45);
-      border-radius: var(--r-md);
-      min-height: var(--tap);
-      padding: 8px 12px;
-      font-size: 12.5px;
+    .pill-btn {
+      min-height: 38px;
+      padding: 0 11px;
+      border-radius: var(--r-pill);
+      border: 1px solid rgba(244, 194, 91, 0.55);
+      background: var(--glass-strong);
+      color: var(--gold-1);
+      font-size: 12px;
       font-weight: 700;
-      line-height: 1.15;
       cursor: pointer;
       backdrop-filter: blur(8px);
-      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
     }
 
-    button:active { transform: scale(0.97); }
-    button:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
-    button:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    .btn-ornament-gold {
-      background: linear-gradient(135deg, rgba(161, 98, 7, 0.92), rgba(234, 179, 78, 0.95));
-      border: 1px solid var(--gold-light);
-      color: #070c18;
-      font-weight: 800;
-      box-shadow: 0 6px 20px rgba(234, 179, 78, 0.28);
-    }
-
-    .btn-ornament-glass {
-      background: rgba(10, 20, 42, 0.64);
-      border: 1px solid rgba(253, 230, 138, 0.55);
-      color: var(--gold-light);
-      box-shadow: inset 0 0 0 1px rgba(234, 179, 78, 0.18);
-    }
-
-    .viewport {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px;
-      display: flex;
+    /* Экраны */
+    .screen {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: none;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
+      padding: 66px 16px 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .screen.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .scene-screen { display: none; flex-direction: column; justify-content: space-between; gap: 12px; flex: 1; }
-    .scene-screen.active { display: flex; }
-
-    /* Орнаментальная карточка */
-    .ornate-card {
-      background: rgba(9, 17, 36, 0.62);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(234, 179, 78, 0.42);
-      border-radius: var(--r-lg);
-      padding: 13px;
-      box-shadow: inset 0 0 0 1px rgba(253, 230, 138, 0.12);
-    }
-
-    .hero-title {
-      font-size: 20px;
-      line-height: 1.22;
-      color: var(--gold-light);
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
-    }
-
-    .sub-copy {
-      font-size: 12.5px;
-      line-height: 1.42;
-      color: var(--muted);
-    }
-
-    /* Медальон батыра, золотой арки, каравана и шкатулки */
-    .hero-medallion {
+    /* Главная золотая кнопка в стиле шёлковой ленты */
+    .silk-cta {
       position: relative;
-      border-radius: var(--r-xl);
-      border: 1.5px solid rgba(234, 179, 78, 0.62);
-      background: radial-gradient(circle at 50% 25%, rgba(234, 179, 78, 0.25), rgba(7, 13, 28, 0.78) 76%);
-      padding: 14px;
-      overflow: hidden;
-      min-height: 166px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      min-height: 54px;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: var(--r-pill);
+      border: 1.5px solid var(--gold-1);
+      background: linear-gradient(95deg, #8b560e 0%, #eab64e 35%, #fff0b8 50%, #eab64e 65%, #8b560e 100%);
+      background-size: 200% 100%;
+      color: #120b02;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(244, 194, 91, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      animation: ribbonShimmer 4.5s ease-in-out infinite;
+    }
+    .silk-cta:active { transform: scale(0.98); }
+
+    @keyframes ribbonShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
+    .ghost-btn {
+      min-height: var(--tap);
+      padding: 10px 14px;
+      border-radius: var(--r-pill);
+      border: 1px solid rgba(244, 194, 91, 0.5);
+      background: var(--glass);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid rgba(244, 194, 91, 0.42);
+      border-radius: var(--r-card);
+      padding: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ЭТАП Б — Полноэкранный кинематограф */
+    #screen-intro {
+      padding: 0;
+      z-index: 9;
+      background: #040916;
+    }
     #introVideo {
       position: absolute;
       inset: 0;
@@ -218,440 +227,488 @@
       height: 100%;
       object-fit: cover;
       display: none;
-      z-index: 0;
-    }
-
-    #introVideo.has-video { display: block; }
-
-    .medallion-center {
-      position: relative;
       z-index: 1;
-      text-align: center;
-      margin: auto 0;
+    }
+    #introVideo.playing { display: block; }
+
+    .intro-caption-bar {
+      position: relative;
+      z-index: 3;
+      margin-top: auto;
+      padding: 18px 18px 24px;
+      background: linear-gradient(180deg, transparent 0%, rgba(4, 9, 22, 0.88) 38%, rgba(4, 9, 22, 0.96) 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .intro-skip {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 4;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: var(--r-pill);
+      border: 1px solid rgba(244, 194, 91, 0.5);
+      background: rgba(5, 11, 26, 0.65);
+      color: var(--gold-1);
+      font-size: 12px;
+      cursor: pointer;
     }
 
-    .arch-motif {
-      width: 112px;
-      height: 62px;
-      margin: 0 auto 6px;
-      border-top: 3px solid var(--gold-light);
-      border-left: 3px solid var(--gold);
-      border-right: 3px solid var(--gold);
-      border-radius: 60px 60px 8px 8px;
-      box-shadow: 0 0 22px rgba(234, 179, 78, 0.35);
+    /* ЭТАП Г — Минималистичный AR-HUD */
+    .ar-hud-top {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-size: 20px;
-      background: rgba(11, 21, 43, 0.45);
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .stage-pill {
+      padding: 8px 14px;
+      border-radius: var(--r-pill);
+      background: var(--glass);
+      border: 1px solid rgba(244, 194, 91, 0.55);
+      color: var(--gold-1);
+      font-size: 12.5px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
     }
 
-    /* Пространство AR-охоты: максимум открытого вида на камеру */
-    .ar-arena {
-      position: relative;
-      flex: 1;
-      min-height: 350px;
-      border-radius: var(--r-xl);
-      border: 1px solid rgba(234, 179, 78, 0.55);
-      overflow: hidden;
+    .ar-bottom-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ar-mini-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
-    #arSparks {
+    /* ЭТАП Д — Интерактивное задание */
+    .spark-target {
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-1);
+      background: radial-gradient(circle, #fff6cf 0%, #f4c25b 55%, rgba(185, 122, 25, 0.25) 100%);
+      box-shadow: 0 0 24px rgba(244, 194, 91, 0.85);
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s ease;
+    }
+    .spark-target:active { transform: translate(-50%, -50%) scale(0.86); }
+
+    /* Модальные выдвижные шторки (Карта / Сундук / Помощь) */
+    .sheet-backdrop {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .ar-layer {
-      position: relative;
-      z-index: 2;
-      height: 100%;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .ar-pill-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .gold-chip {
-      padding: 6px 11px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      background: rgba(9, 17, 36, 0.72);
-      border: 1px solid rgba(234, 179, 78, 0.55);
-      color: var(--gold-light);
+      z-index: 20;
+      background: rgba(3, 7, 18, 0.72);
       backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
     }
-
-    .catch-zone {
-      position: relative;
-      flex: 1;
+    .sheet-backdrop.open { display: flex; }
+    .sheet-panel {
       width: 100%;
-    }
-
-    /* Орнаментальный AR-артефакт для захвата */
-    .ar-chest-btn {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, #fde68a, #eab34e 62%, #78350f);
-      border: 2.5px solid var(--gold-light);
-      box-shadow: 0 0 0 5px rgba(234, 179, 78, 0.22), 0 0 28px rgba(234, 179, 78, 0.65);
-      color: #070c18;
-      font-weight: 900;
-      font-size: 10.5px;
+      max-height: 82%;
+      overflow-y: auto;
+      background: linear-gradient(180deg, #0d1c3a 0%, #060d1f 100%);
+      border-top: 1.5px solid rgba(244, 194, 91, 0.65);
+      border-radius: 24px 24px 0 0;
+      padding: 18px 16px 24px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      transition: left 0.45s ease, top 0.45s ease, transform 0.15s ease;
+      gap: 12px;
     }
 
-    .ar-chest-btn:active { transform: translate(-50%, -50%) scale(0.92); }
-
-    .compact-caption {
-      background: rgba(8, 15, 31, 0.72);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(234, 179, 78, 0.4);
-      border-radius: var(--r-md);
-      padding: 9px 11px;
+    .route-item {
+      padding: 12px;
+      border-radius: var(--r-btn);
+      border: 1px solid rgba(244, 194, 91, 0.35);
+      background: rgba(12, 25, 54, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 3px;
-    }
-
-    .compact-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    /* Маршрут и подарки */
-    .route-ribbon {
-      display: flex;
       gap: 6px;
     }
+    .route-item.done { border-color: var(--emerald); }
+    .route-item.locked { opacity: 0.58; }
 
-    .route-stop-pill {
-      flex: 1;
-      text-align: center;
-      padding: 7px 6px;
-      border-radius: var(--r-md);
+    .badge-status {
       font-size: 11px;
-      font-weight: 800;
-      background: rgba(9, 17, 36, 0.72);
-      border: 1px solid rgba(234, 179, 78, 0.35);
-      color: var(--muted);
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      font-weight: 700;
     }
-
-    .route-stop-pill.done {
-      border-color: var(--ok);
-      color: var(--ok);
-    }
-
-    .list-stack { display: flex; flex-direction: column; gap: 8px; }
-
-    .ornate-row {
-      background: rgba(9, 17, 36, 0.68);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(234, 179, 78, 0.38);
-      border-radius: var(--r-md);
-      padding: 11px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .ornate-row.done { border-color: rgba(52, 211, 153, 0.7); }
-
-    .row-flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .tiny-legal {
-      font-size: 10.5px;
-      line-height: 1.35;
-      color: var(--gold-light);
-      opacity: 0.88;
-    }
-
-    /* Нижняя орнаментальная панель */
-    .dock {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
-      padding: 8px 10px;
-      background: rgba(6, 12, 26, 0.9);
-      border-top: 1px solid rgba(234, 179, 78, 0.4);
-      backdrop-filter: blur(10px);
-    }
-
-    .dock button {
-      min-height: var(--tap);
-      padding: 6px 4px;
-      font-size: 11.5px;
-      border-radius: 11px;
-      background: rgba(15, 27, 54, 0.75);
-    }
-
-    .dock button.active {
-      border-color: var(--gold-light);
-      color: var(--gold-light);
-      background: linear-gradient(180deg, rgba(234, 179, 78, 0.25), rgba(146, 64, 14, 0.25));
-    }
+    .st-done { background: rgba(52, 211, 153, 0.2); color: var(--emerald); }
+    .st-active { background: rgba(244, 194, 91, 0.22); color: var(--gold-1); }
+    .st-locked { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; }
   </style>
 </head>
 <body>
-  <div class="device-shell" id="deviceShell">
-    <video id="arCamera" autoplay playsinline muted></video>
-    <div class="ornament-frame"></div>
+  <div class="app-shell" id="appShell">
+    <video id="cameraFeed" playsinline muted autoplay></video>
 
+    <!-- Художественный интерьер MEGA Silk Way (атриум, витраж, световые колонны) -->
+    <svg class="stage-bg interior-bg" id="atriumScene" viewBox="0 0 430 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#071229" />
+          <stop offset="55%" stop-color="#11254d" />
+          <stop offset="100%" stop-color="#081224" />
+        </linearGradient>
+        <linearGradient id="glassHall" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff4cc" stop-opacity="0.34" />
+          <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#f4c25b" stop-opacity="0.22" />
+        </linearGradient>
+        <linearGradient id="goldRibbon" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#b97a19" stop-opacity="0.2" />
+          <stop offset="50%" stop-color="#fff0b8" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#f4c25b" stop-opacity="0.25" />
+        </linearGradient>
+      </defs>
+      <rect width="430" height="860" fill="url(#skyNight)" />
+      <!-- Стеклянная крыша и ветвящиеся колонны атриума MEGA Silk Way -->
+      <path d="M25 260 Q215 110 405 260 L405 640 L25 640 Z" fill="url(#glassHall)" />
+      <path d="M115 640 L115 390 L70 280 M115 390 L160 280" stroke="#fde68a" stroke-width="5" stroke-opacity="0.45" fill="none" />
+      <path d="M315 640 L315 390 L270 280 M315 390 L360 280" stroke="#fde68a" stroke-width="5" stroke-opacity="0.45" fill="none" />
+      <!-- Пол атриума и золотая шёлковая лента-проводник -->
+      <polygon points="0,640 430,640 430,860 0,860" fill="#0b1833" />
+      <path id="guideRibbonPath" d="M215 840 C160 760, 275 700, 215 615 C175 555, 235 505, 215 445"
+            stroke="url(#goldRibbon)" stroke-width="10" stroke-linecap="round" fill="none" />
+      <path d="M202 565 L215 548 L228 565" stroke="#fff0b8" stroke-width="4" stroke-linecap="round" fill="none" />
+      <path d="M204 510 L215 494 L226 510" stroke="#fff0b8" stroke-width="4" stroke-linecap="round" fill="none" />
+    </svg>
+
+    <!-- Персонаж Батыр в меховой шапке и бело-золотом плаще + бирюзово-золотой сундук -->
+    <svg class="stage-bg" id="batyrScene" viewBox="0 0 430 860" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <radialGradient id="chestGlow" cx="50%" cy="55%" r="45%">
+          <stop offset="0%" stop-color="#fff3bd" stop-opacity="0.95" />
+          <stop offset="55%" stop-color="#f4c25b" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#f4c25b" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="cloakWhiteGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff9eb" />
+          <stop offset="65%" stop-color="#e8dec8" />
+          <stop offset="100%" stop-color="#d4a243" />
+        </linearGradient>
+        <linearGradient id="chestTurquoise" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2dd4bf" />
+          <stop offset="100%" stop-color="#0f766e" />
+        </linearGradient>
+      </defs>
+
+      <!-- Золотая арка из шёлковой ленты -->
+      <path d="M75 560 C75 230, 355 230, 355 560" stroke="#f4c25b" stroke-width="8" fill="none" stroke-opacity="0.7" />
+
+      <!-- Батыр (меховая шапка, благородное лицо, бело-золотой плащ) -->
+      <g id="batyrGroup" transform="translate(215, 365)">
+        <!-- Бело-золотой плащ -->
+        <path d="M-95 165 L-72 25 Q0 -5 72 25 L95 165 Z" fill="url(#cloakWhiteGold)" stroke="#f4c25b" stroke-width="3" />
+        <path d="M-75 155 L75 155" stroke="#f4c25b" stroke-width="5" stroke-dasharray="10 6" />
+        <!-- Лицо -->
+        <ellipse cx="0" cy="-28" rx="31" ry="38" fill="#e8be96" />
+        <path d="M-16 -10 Q0 4 16 -10" stroke="#5c3a21" stroke-width="3" fill="none" />
+        <circle cx="-11" cy="-32" r="3" fill="#2b1b10" />
+        <circle cx="11" cy="-32" r="3" fill="#2b1b10" />
+        <!-- Меховая шапка с золотым орнаментом -->
+        <ellipse cx="0" cy="-58" rx="44" ry="18" fill="#8c6d4f" stroke="#f4c25b" stroke-width="2.5" />
+        <path d="M-30 -64 Q0 -96 30 -64 Z" fill="#182b54" stroke="#f4c25b" stroke-width="2.5" />
+        <circle cx="0" cy="-74" r="6" fill="#f4c25b" />
+      </g>
+
+      <!-- Бирюзово-золотой сундук с золотым свечением -->
+      <g id="chestGroup" transform="translate(215, 515)">
+        <circle cx="0" cy="0" r="110" fill="url(#chestGlow)" />
+        <rect x="-64" y="-22" width="128" height="62" rx="10" fill="url(#chestTurquoise)" stroke="#f4c25b" stroke-width="3.5" />
+        <path d="M-68 -22 Q0 -58 68 -22 Z" fill="#14b8a6" stroke="#fff0b8" stroke-width="3" />
+        <rect x="-12" y="-12" width="24" height="28" rx="5" fill="#f4c25b" />
+        <circle cx="0" cy="4" r="4" fill="#071229" />
+      </g>
+    </svg>
+
+    <div class="gold-border"></div>
+
+    <!-- Компактная шапка -->
     <header class="topbar">
-      <div class="brand-mark">
-        <span class="brand-kicker" id="txtKicker">АЛТЫН КЕРУЕН • AR</span>
-        <span class="brand-name">MEGA SILK WAY</span>
+      <div class="brand-lockup">
+        <span class="brand-crown">✦ АЛТЫН КЕРУЕН</span>
+        <span class="brand-title">MEGA Silk Way</span>
+        <span class="brand-sub" id="hdrCity">АСТАНА • EXPO</span>
       </div>
-      <div class="top-controls">
-        <button type="button" id="btnLang" onclick="toggleLang()">KZ</button>
-        <button type="button" id="btnSound" onclick="toggleSound()">🔇</button>
-        <button type="button" class="btn-ornament-glass" id="btnCamTop" onclick="toggleCamera()">📷 AR</button>
+      <div class="top-actions ui-sans">
+        <button type="button" class="pill-btn" id="btnLang" onclick="toggleLang()">KZ</button>
+        <button type="button" class="pill-btn" id="btnSound" onclick="toggleSound()">🔇</button>
       </div>
     </header>
 
-    <main class="viewport">
-      <!-- 1. QR / 30с -->
-      <section class="scene-screen active" id="screen-qr">
-        <div class="row-flex" style="flex-wrap: wrap;">
-          <span class="gold-chip" id="txtBadgeQr">✦ QR • БЕЗ РЕГИСТРАЦИИ</span>
-          <span class="gold-chip" id="txtBadgeTime">0 / 30 с</span>
+    <!-- ЭКРАН 1 (ЭТАП А): Вход по QR — только одна главная кнопка «Войти в сказку» -->
+    <section class="screen active" id="screen-qr">
+      <div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px; text-align: center;">
+        <p style="font-size: 13px; letter-spacing: 1.5px; color: var(--gold-1); text-transform: uppercase;" id="qrSub">
+          Вход со стороны EXPO
+        </p>
+        <h1 style="font-size: 28px; line-height: 1.18; color: var(--ink); text-shadow: 0 4px 20px rgba(0,0,0,0.85);" id="qrTitle">
+          Алтын Керуен
+        </h1>
+        <button type="button" class="silk-cta ui-sans" id="btnEnterTale" onclick="enterTale()">
+          Войти в сказку
+        </button>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 2 (ЭТАП Б): Кинематографичное вступление (30 с) -->
+    <section class="screen" id="screen-intro">
+      <video id="introVideo" playsinline></video>
+      <button type="button" class="intro-skip ui-sans" id="btnSkipIntro" onclick="finishIntro()">
+        Пропустить →
+      </button>
+      <div class="intro-caption-bar">
+        <span class="ui-sans" style="font-size: 11px; letter-spacing: 1.4px; color: var(--gold-2);" id="introPhaseLabel">
+          0:00 — 0:30 • ЗОЛОТАЯ АРКА И СУНДУК
+        </span>
+        <p style="font-size: 16px; line-height: 1.38; color: var(--ink);" id="introCaptionText">
+          Золотая шёлковая лента создаёт арку, батыр открывает сундук и дарит первые золотые искры пути.
+        </p>
+      </div>
+    </section>
+
+    <!-- ЭТАП В: Первый подарок + кнопка «НАЧАТЬ ПУТЕШЕСТВИЕ» -->
+    <section class="screen" id="screen-gift1">
+      <div></div>
+      <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; gap: 12px;">
+        <span class="ui-sans" style="font-size: 11px; letter-spacing: 1.5px; color: var(--turquoise);" id="gift1Tag">
+          ПЕРВЫЙ ДАР БАТЫРА
+        </span>
+        <h2 style="font-size: 22px; color: var(--gold-1);" id="gift1Title">
+          Искра Шёлкового пути • +50 баллов
+        </h2>
+        <p class="ui-sans" style="font-size: 13.5px; color: var(--ink-soft);" id="gift1Desc">
+          Сундук открыт. Следуйте за золотой лентой по маршруту MEGA Silk Way и открывайте новые сокровища.
+        </p>
+        <button type="button" class="silk-cta ui-sans" style="margin-top: 6px;" id="btnStartJourney" onclick="startJourney()">
+          НАЧАТЬ ПУТЕШЕСТВИЕ
+        </button>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 3 (ЭТАП Г): AR-навигация по интерьеру MEGA Silk Way -->
+    <section class="screen" id="screen-nav">
+      <div class="ar-hud-top ui-sans">
+        <div class="stage-pill" id="hudStagePill">Точка 1 из 3 • EXPO</div>
+        <div class="stage-pill" id="hudDistPill">~40 м • Арка</div>
+      </div>
+
+      <div class="ar-bottom-bar ui-sans">
+        <p style="font-size: 12.5px; text-align: center; color: var(--gold-1); text-shadow: 0 2px 10px rgba(0,0,0,0.9);" id="hudSafetyTip">
+          Идите спокойно, смотрите по сторонам; задание откроется на точке.
+        </p>
+        <button type="button" class="silk-cta" id="btnArrivePoint" onclick="openQuestAtCurrentPoint()">
+          Открыть задание на точке
+        </button>
+        <div class="ar-mini-row">
+          <button type="button" class="ghost-btn" onclick="openSheet('map')" id="btnNavMap">Карта</button>
+          <button type="button" class="ghost-btn" onclick="openSheet('chest')" id="btnNavChest">Сундук</button>
+          <button type="button" class="ghost-btn" onclick="openSheet('help')" id="btnNavHelp">Помощь</button>
         </div>
+      </div>
+    </section>
 
-        <h1 class="hero-title" id="txtTitle">Дар Батыра и Зимний Караван</h1>
+    <!-- ЭКРАН 4 (ЭТАП Д): Охота за сокровищем (интерактивное задание на точке) -->
+    <section class="screen" id="screen-quest">
+      <div class="ar-hud-top ui-sans">
+        <div class="stage-pill" id="questCounter">Искры: 0 / 3</div>
+        <button type="button" class="pill-btn" onclick="openScreen('nav')" id="btnBackToNav">← Лента</button>
+      </div>
 
-        <div class="hero-medallion">
-          <video id="introVideo" playsinline controls></video>
-          <div class="medallion-center" id="medallionCenter">
-            <div class="arch-motif">⚔️🐪✨</div>
-            <strong style="font-size: 12.5px; color: var(--gold-light);" id="txtSceneBeat"></strong>
-          </div>
-          <div class="row-flex" style="position: relative; z-index: 1;">
-            <span style="font-size: 11px; color: var(--muted);" id="txtVideoHint"></span>
-            <span class="gold-chip" style="padding: 3px 8px; font-size: 10px;">EXPO</span>
-          </div>
+      <!-- Интерактивное поле ловли 3 золотых частиц поверх камеры/атриума -->
+      <div id="questArena" style="position: relative; flex: 1; width: 100%;">
+        <button type="button" class="spark-target" id="sparkBtn" style="left: 50%; top: 48%;" aria-label="Поймать золотую частицу" onclick="collectSpark()"></button>
+      </div>
+
+      <div class="glass-card ui-sans" style="text-align: center;">
+        <p style="font-size: 13.5px; font-weight: 600; color: var(--gold-1);" id="questPrompt">
+          Нажмите на светящуюся золотую частицу, чтобы наполнить сундук (3 раза).
+        </p>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 6 / ЭТАП И: Найденный подарок / Финальная сокровищница -->
+    <section class="screen" id="screen-reward">
+      <div></div>
+      <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; gap: 12px;">
+        <span class="ui-sans" style="font-size: 11px; letter-spacing: 1.5px; color: var(--emerald);" id="rewardBadge">
+          СОКРОВИЩЕ ОТКРЫТО
+        </span>
+        <h2 style="font-size: 22px; color: var(--gold-1);" id="rewardTitle">Шкатулка Батыра</h2>
+        <p class="ui-sans" style="font-size: 14px; color: var(--ink);" id="rewardPoints">+50 демо-баллов</p>
+        <p class="ui-sans" style="font-size: 12.5px; color: var(--ink-soft);" id="rewardCongrat"></p>
+        <button type="button" class="silk-cta ui-sans" id="btnNextAfterReward" onclick="advanceAfterReward()">
+          К следующей точке →
+        </button>
+        <div id="finalShareRow" style="display: none; gap: 8px;" class="ui-sans">
+          <button type="button" class="ghost-btn" style="flex: 1;" onclick="shareResult()" id="btnShareRes">Поделиться</button>
+          <button type="button" class="ghost-btn" style="flex: 1;" onclick="openSheet('map')" id="btnFinalMap">К карте</button>
         </div>
+      </div>
+    </section>
 
-        <p class="sub-copy" id="txtIntroCopy"></p>
-
-        <div class="compact-actions">
-          <button type="button" class="btn-ornament-glass" id="btnCamMain" onclick="toggleCamera()">📷 Камера AR</button>
-          <button type="button" class="btn-ornament-gold" id="btnStartHunt" onclick="openScreen('hunt')">✦ Начать AR-охоту</button>
+    <!-- Выдвижная панель: Карта маршрута (Этап Е) / Сундук бонусов (Этап З) / Помощь -->
+    <div class="sheet-backdrop ui-sans" id="sheetBackdrop" onclick="closeSheetOnBackdrop(event)">
+      <div class="sheet-panel" id="sheetPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="font-size: 16px; color: var(--gold-1);" id="sheetTitle">Маршрут</strong>
+          <button type="button" class="pill-btn" onclick="closeSheet()">✕</button>
         </div>
-
-        <p id="txtCamStatus" class="sub-copy" style="font-size: 11.5px; color: var(--turquoise);" aria-live="polite"></p>
-        <p class="tiny-legal" id="txtLegal"></p>
-      </section>
-
-      <!-- 2. AR-охота поверх камеры -->
-      <section class="scene-screen" id="screen-hunt">
-        <div class="ar-arena">
-          <canvas id="arSparks"></canvas>
-          <div class="ar-layer">
-            <div class="ar-pill-row">
-              <span class="gold-chip" id="txtRadar">🧭 EXPO</span>
-              <span class="gold-chip" id="txtScore">0 / 3 • 0 б.</span>
-            </div>
-
-            <div class="catch-zone">
-              <button type="button" class="ar-chest-btn" id="btnCatch" style="left: 50%; top: 52%;" onclick="catchGift()">
-                <span style="font-size: 19px;">🧰</span>
-                <span id="txtCatch">ЗАБРАТЬ</span>
-              </button>
-            </div>
-
-            <div class="compact-caption">
-              <strong style="font-size: 12px; color: var(--gold-light);" id="txtCurrentGift"></strong>
-              <span style="font-size: 11.5px; color: var(--muted);" id="txtCurrentStep" aria-live="polite"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="compact-actions">
-          <button type="button" class="btn-ornament-glass" id="btnShift" onclick="shiftChest()">✦ Сдвинуть метку</button>
-          <button type="button" class="btn-ornament-gold" id="btnToRoute" onclick="openScreen('route')">Маршрут →</button>
-        </div>
-      </section>
-
-      <!-- 3. Маршрут -->
-      <section class="scene-screen" id="screen-route" style="justify-content: flex-start;">
-        <h2 class="hero-title" style="font-size: 18px;" id="txtRouteHeading">Маршрут по ТРЦ</h2>
-        <div class="route-ribbon" id="routeRibbon"></div>
-        <div class="list-stack" id="routeCards"></div>
-        <p class="tiny-legal" id="txtRouteNote"></p>
-      </section>
-
-      <!-- 4. Подарки -->
-      <section class="scene-screen" id="screen-gifts" style="justify-content: flex-start;">
-        <div class="ornate-card row-flex">
-          <span style="font-size: 13px; color: var(--muted);" id="txtPtsLabel">Демо-баллы:</span>
-          <strong style="font-size: 18px; color: var(--gold-light);" id="txtPtsVal">0</strong>
-        </div>
-        <div class="list-stack" id="giftCards"></div>
-        <p class="tiny-legal" id="txtGiftsNote"></p>
-      </section>
-    </main>
-
-    <nav class="dock" aria-label="Навигация">
-      <button type="button" id="nav-qr" class="active" onclick="openScreen('qr')">QR / 30с</button>
-      <button type="button" id="nav-hunt" onclick="openScreen('hunt')">AR-Охота</button>
-      <button type="button" id="nav-route" onclick="openScreen('route')">Маршрут</button>
-      <button type="button" id="nav-gifts" onclick="openScreen('gifts')">Подарки</button>
-    </nav>
+        <div id="sheetBody" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      </div>
+    </div>
   </div>
 
   <script>
-    const state = {
-      screen: 'qr',
-      lang: 'ru',
-      camOn: false,
-      camKey: 'camOff',
-      stream: null,
-      soundOn: false,
-      audioCtx: null,
-      sec: 0,
-      timerId: null,
-      animId: null,
-      moveId: null,
-      spotIdx: 0,
-      points: 0,
-      items: [
-        {
-          id: 1,
-          ruZone: 'EXPO', kzZone: 'EXPO',
-          ruStep: 'Точка 1 • Вход EXPO (Золотая арка)', kzStep: '1-нүкте • EXPO кіреберісі (Алтын арка)',
-          ruGift: 'Шкатулка Батыра • 50 б.', kzGift: 'Батыр Сандығы • 50 ұ.',
-          pts: 50, found: false
-        },
-        {
-          id: 2,
-          ruZone: 'Атриум', kzZone: 'Атриум',
-          ruStep: 'Точка 2 → Центральный атриум', kzStep: '2-нүкте → Орталық атриум',
-          ruGift: 'Шёлковый Дар Каравана • 75 б.', kzGift: 'Керуеннің Жібек Сыйы • 75 ұ.',
-          pts: 75, found: false
-        },
-        {
-          id: 3,
-          ruZone: 'Галерея', kzZone: 'Галерея',
-          ruStep: 'Точка 3 → Семейная галерея', kzStep: '3-нүкте → Отбасылық галерея',
-          ruGift: 'Золотой Сундук MEGA • 100 б.', kzGift: 'MEGA Алтын Сандығы • 100 ұ.',
-          pts: 100, found: false
-        }
-      ]
-    };
-
-    const spots = [
-      { left: '26%', top: '36%' },
-      { left: '74%', top: '34%' },
-      { left: '50%', top: '60%' },
-      { left: '30%', top: '64%' }
+    /**
+     * Конфигурация маршрута (3 демо-точки, расширяемо до 5–7 точек по плану MEGA Silk Way).
+     * Призы выдаются строго последовательно после выполнения задания на текущей точке.
+     */
+    const ROUTE_POINTS = [
+      {
+        id: 'expo',
+        ruZone: 'Вход со стороны EXPO',
+        kzZone: 'EXPO жағындағы кіреберіс',
+        ruLandmark: 'Световая арка и главный вход',
+        kzLandmark: 'Жарық аркасы және бас кіреберіс',
+        dist: '~35 м',
+        ruReward: 'Шкатулка Батыра',
+        kzReward: 'Батыр Сандығы',
+        pts: 50,
+        sparksNeeded: 3
+      },
+      {
+        id: 'atrium',
+        ruZone: 'Главный атриум',
+        kzZone: 'Бас атриум',
+        ruLandmark: 'Центральный свет под стеклянной крышей',
+        kzLandmark: 'Шыны шатыр астындағы орталық кеңістік',
+        dist: '~65 м',
+        ruReward: 'Шёлковый Дар Каравана',
+        kzReward: 'Керуеннің Жібек Сыйы',
+        pts: 75,
+        sparksNeeded: 3
+      },
+      {
+        id: 'gallery',
+        ruZone: 'Восточная галерея',
+        kzZone: 'Шығыс галереясы',
+        ruLandmark: 'Просторная галерея второго уровня',
+        kzLandmark: 'Екінші деңгейдегі кең галерея',
+        dist: '~90 м',
+        ruReward: 'Золотой Сундук MEGA',
+        kzReward: 'MEGA Алтын Сандығы',
+        pts: 100,
+        sparksNeeded: 3
+      }
     ];
 
-    const dict = {
+    const I18N = {
       ru: {
-        txtKicker: 'АЛТЫН КЕРУЕН • AR',
+        hdrCity: 'АСТАНА • EXPO',
         btnLang: 'KZ',
-        camTopOff: '📷 AR',
-        camTopOn: '📷 Вкл',
-        txtBadgeQr: '✦ QR • БЕЗ РЕГИСТРАЦИИ',
-        txtTitle: 'Дар Батыра и Зимний Караван',
-        txtVideoHint: 'Автозапуск intro.mp4 при загрузке',
-        txtIntroCopy: 'Золотая арка, караван и шкатулка у MEGA Silk Way — затем поиск скрытых подарков в AR поверх камеры.',
-        btnCamMain: '📷 Камера AR',
-        btnCamOff: '📷 Выкл камеру',
-        btnStartHunt: '✦ Начать AR-охоту',
-        camOff: 'Камера выключена — AR-шкатулка доступна сразу.',
-        camOn: 'Камера активна — золотая шкатулка поверх видео.',
-        camErr: 'Камера недоступна — работает режим без камеры.',
-        txtLegal: 'Независимый демо-концепт (не официальный продукт MEGA Silk Way). Схема, подарки и баллы условны и требуют согласования.',
-        txtCatch: 'ЗАБРАТЬ',
-        btnShift: '✦ Сдвинуть метку',
-        btnToRoute: 'Маршрут →',
-        doneAll: 'Все 3 подарка собраны! Откройте «Маршрут» или «Подарки».',
-        txtRouteHeading: 'Маршрут по ТРЦ',
-        txtRouteNote: 'Условная демо-схема для проверки сценария (не официальный план MEGA Silk Way).',
-        goHunt: 'Найти в AR',
-        caughtState: '✓ Получено',
-        txtPtsLabel: 'Демо-баллы:',
-        giftsLocked: 'Ещё не открыто — найдите в «AR-Охоте»',
-        giftsUnlocked: '✓ Открыто в демо-сессии',
-        txtGiftsNote: 'Демо-статус: баллы и подарки тестовые и требуют согласования при запуске.',
-        navQr: 'QR / 30с', navHunt: 'AR-Охота', navRoute: 'Маршрут', navGifts: 'Подарки',
-        beats: [
-          '0–8 с • Золотая арка и караван у входа',
-          '8–15 с • Батыр протягивает шкатулку',
-          '15–22 с • Золотой свет и шёлковые ленты',
-          '22–30 с • Старт маршрута за подарками'
-        ]
+        qrSub: 'Вход со стороны EXPO',
+        qrTitle: 'Алтын Керуен',
+        btnEnterTale: 'Войти в сказку',
+        btnSkipIntro: 'Пропустить →',
+        introBeats: [
+          'Золотая шёлковая лента создаёт арку у входа MEGA Silk Way.',
+          'Из золотой арки выходит батыр с караваном и открывает сундук.',
+          'Из сундука взлетают золотые частицы и магические подарки.'
+        ],
+        gift1Tag: 'ПЕРВЫЙ ДАР БАТЫРА',
+        gift1Title: 'Искра Шёлкового пути • +50 баллов',
+        gift1Desc: 'Сундук открыт. Идите по золотой ленте и открывайте точки маршрута одну за другой.',
+        btnStartJourney: 'НАЧАТЬ ПУТЕШЕСТВИЕ',
+        hudSafetyTip: 'Идите спокойно, смотрите по сторонам; задание откроется на точке.',
+        btnArrivePoint: 'Открыть задание на точке',
+        btnNavMap: 'Карта',
+        btnNavChest: 'Сундук',
+        btnNavHelp: 'Помощь',
+        btnBackToNav: '← Лента',
+        questPrompt: 'Нажмите на золотую частицу, чтобы наполнить сундук (3 раза).',
+        rewardBadge: 'СОКРОВИЩЕ ОТКРЫТО',
+        nextPointCta: 'К следующей точке →',
+        finalTitle: 'Большой Золотой Сундук Открыт!',
+        finalCongrat: 'Батыр поздравляет вас с прохождением маршрута в MEGA Silk Way (демо-баллы и призы требуют согласования при запуске).',
+        btnShareRes: 'Поделиться',
+        btnFinalMap: 'К карте',
+        sheetMapTitle: 'Маршрут по MEGA Silk Way',
+        sheetChestTitle: 'Сундук бонусов',
+        sheetHelpTitle: 'Помощь и правила',
+        stDone: 'Открыто',
+        stActive: 'Текущая точка',
+        stLocked: 'Закрыто до прохождения предыдущей',
+        demoLegal: 'Независимый демо-концепт (не официальный продукт MEGA Silk Way). Маршрут, баллы и награды демонстрационные и требуют согласования.'
       },
       kz: {
-        txtKicker: 'АЛТЫН КЕРУЕН • AR',
+        hdrCity: 'АСТАНА • EXPO',
         btnLang: 'RU',
-        camTopOff: '📷 AR',
-        camTopOn: '📷 Қосулы',
-        txtBadgeQr: '✦ QR • ТІРКЕУСІЗ',
-        txtTitle: 'Батыр Сыйы және Қысқы Керуен',
-        txtVideoHint: 'intro.mp4 жүктелсе — автоматты қосылады',
-        txtIntroCopy: 'MEGA Silk Way жанында алтын арка, керуен және сандық — кейін камера үстінде AR-сыйлық іздеу.',
-        btnCamMain: '📷 AR Камера',
-        btnCamOff: '📷 Өшіру',
-        btnStartHunt: '✦ AR-аңшылықты бастау',
-        camOff: 'Камера өшірулі — AR-сандық қолжетімді.',
-        camOn: 'Камера қосулы — алтын сандық бейне үстінде.',
-        camErr: 'Камера қолжетімсіз — камерасыз режим жұмыс істейді.',
-        txtLegal: 'Тәуелсіз демо-концепт (MEGA Silk Way ресми өнімі емес). Схема, сыйлықтар мен ұпайлар шартты және келісуді қажет етеді.',
-        txtCatch: 'АЛУ',
-        btnShift: '✦ Белгіні жылжыту',
-        btnToRoute: 'Маршрут →',
-        doneAll: 'Барлық 3 сыйлық алынды! «Маршрут» немесе «Сыйлықтар» бөлімін ашыңыз.',
-        txtRouteHeading: 'СОО бойынша маршрут',
-        txtRouteNote: 'Сценарийді тексеруге арналған шартты демо-схема (MEGA Silk Way ресми жоспары емес).',
-        goHunt: 'AR-да табу',
-        caughtState: '✓ Алынды',
-        txtPtsLabel: 'Демо-ұпайлар:',
-        giftsLocked: 'Әлі алынбаған — «AR-Ойын» бөлімін ашыңыз',
-        giftsUnlocked: '✓ Демо-сессияда алынды',
-        txtGiftsNote: 'Демо-мәртебе: ұпайлар мен сыйлықтар тесттік және келісуді қажет етеді.',
-        navQr: 'QR / 30с', navHunt: 'AR-Ойын', navRoute: 'Маршрут', navGifts: 'Сыйлықтар',
-        beats: [
-          '0–8 с • Кіреберісте алтын арка мен керуен',
-          '8–15 с • Батыр сандықты ұсынады',
-          '15–22 с • Алтын жарық және жібек ленталар',
-          '22–30 с • Сыйлықтар маршрутының басталуы'
-        ]
+        qrSub: 'EXPO жағындағы кіреберіс',
+        qrTitle: 'Алтын Керуен',
+        btnEnterTale: 'Ертегіге кіру',
+        btnSkipIntro: 'Өткізу →',
+        introBeats: [
+          'Алтын жібек лента MEGA Silk Way кіреберісінде арка түзеді.',
+          'Алтын аркадан керуенмен батыр шығып, сандықты ашады.',
+          'Сандықтан алтын ұшқындар мен сиқырлы сыйлықтар көтеріледі.'
+        ],
+        gift1Tag: 'БАТЫРДЫҢ АЛҒАШҚЫ СЫЙЫ',
+        gift1Title: 'Жібек жолы ұшқыны • +50 ұпай',
+        gift1Desc: 'Сандық ашылды. Алтын лентамен жүріп, маршрут нүктелерін ретімен ашыңыз.',
+        btnStartJourney: 'САЯХАТТЫ БАСТАУ',
+        hudSafetyTip: 'Асықпай жүріңіз, айналаңызға қараңыз; тапсырма нүктеде ашылады.',
+        btnArrivePoint: 'Нүктедегі тапсырманы ашу',
+        btnNavMap: 'Карта',
+        btnNavChest: 'Сандық',
+        btnNavHelp: 'Көмек',
+        btnBackToNav: '← Лента',
+        questPrompt: 'Сандықты толтыру үшін алтын ұшқынды басыңыз (3 рет).',
+        rewardBadge: 'ҚАЗЫНА АШЫЛДЫ',
+        nextPointCta: 'Келесі нүктеге →',
+        finalTitle: 'Үлкен Алтын Сандық Ашылды!',
+        finalCongrat: 'Батыр MEGA Silk Way маршрутынан өтуіңізбен құттықтайды (демо-ұпайлар мен сыйлықтар келісуді қажет етеді).',
+        btnShareRes: 'Бөлісу',
+        btnFinalMap: 'Картаға',
+        sheetMapTitle: 'MEGA Silk Way маршруты',
+        sheetChestTitle: 'Бонус сандығы',
+        sheetHelpTitle: 'Көмек және ережелер',
+        stDone: 'Ашылды',
+        stActive: 'Ағымдағы нүкте',
+        stLocked: 'Алдыңғы кезең өткенше жабық',
+        demoLegal: 'Тәуелсіз демо-концепт (MEGA Silk Way ресми өнімі емес). Маршрут, ұпайлар мен сыйлықтар шартты және келісуді қажет етеді.'
       }
     };
 
-    function chime(freq = 659.25) {
+    const state = {
+      lang: 'ru',
+      screen: 'qr',
+      currentIdx: 0,
+      points: 50, // стартовый бонус после Этапа В
+      completed: [false, false, false],
+      sparksCaught: 0,
+      soundOn: false,
+      audioCtx: null,
+      camStream: null,
+      introTimer: null
+    };
+
+    function playChime(freq = 587.33) {
       if (!state.soundOn) return;
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!state.audioCtx) state.audioCtx = new AudioCtx();
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!state.audioCtx) state.audioCtx = new Ctx();
       if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
       const now = state.audioCtx.currentTime;
       const osc = state.audioCtx.createOscillator();
@@ -659,88 +716,44 @@
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now);
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.045, now + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.05, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
       osc.connect(gain);
       gain.connect(state.audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.26);
+      osc.stop(now + 0.3);
     }
 
     function toggleSound() {
       state.soundOn = !state.soundOn;
-      if (state.soundOn) chime(523.25);
-      render();
+      document.getElementById('btnSound').textContent = state.soundOn ? '🔊' : '🔇';
+      if (state.soundOn) playChime(523.25);
     }
 
     function toggleLang() {
       state.lang = state.lang === 'ru' ? 'kz' : 'ru';
-      render();
+      renderAll();
     }
 
-    const sparks = Array.from({ length: 30 }, (_, i) => ({
-      x: (i * 53) % 390,
-      y: (i * 37) % 340,
-      r: 1.3 + (i % 2.5),
-      vy: 0.4 + (i % 3) * 0.25
-    }));
+    function openScreen(id) {
+      state.screen = id;
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + id).classList.add('active');
 
-    function drawSparks() {
-      const c = document.getElementById('arSparks');
-      if (!c) return;
-      const rect = c.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      if (c.width !== Math.round(rect.width) || c.height !== Math.round(rect.height)) {
-        c.width = Math.round(rect.width);
-        c.height = Math.round(rect.height);
-      }
-      const ctx = c.getContext('2d');
-      ctx.clearRect(0, 0, c.width, c.height);
-      ctx.fillStyle = 'rgba(253, 230, 138, 0.8)';
-      sparks.forEach(p => {
-        p.y -= p.vy;
-        if (p.y < -4) p.y = c.height + 4;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      state.animId = requestAnimationFrame(drawSparks);
+      // Показываем батыра и сундук на вступлении/подарке/финале, а атриум и камеру — в навигации/охоте
+      const batyr = document.getElementById('batyrScene');
+      const showBatyr = (id === 'qr' || id === 'intro' || id === 'gift1' || id === 'reward');
+      batyr.style.opacity = showBatyr ? '1' : '0';
+      renderAll();
     }
 
-    function checkVideo() {
-      const vid = document.getElementById('introVideo');
-      const center = document.getElementById('medallionCenter');
-      if (!vid) return;
-      vid.src = 'intro.mp4';
-      vid.onloadeddata = () => {
-        vid.classList.add('has-video');
-        center.style.opacity = '0';
-        vid.play().catch(() => {});
-      };
-      vid.onerror = () => {
-        vid.classList.remove('has-video');
-        center.style.opacity = '1';
-      };
-    }
-
-    async function toggleCamera() {
-      const video = document.getElementById('arCamera');
-      const shell = document.getElementById('deviceShell');
-      if (state.camOn) {
-        if (state.stream) {
-          state.stream.getTracks().forEach(t => t.stop());
-          state.stream = null;
-        }
-        video.classList.remove('active');
-        shell.classList.remove('cam-live');
-        state.camOn = false;
-        state.camKey = 'camOff';
-        render();
-        return;
-      }
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        state.camKey = 'camErr';
-        render();
+    async function enableCameraIfPossible() {
+      const video = document.getElementById('cameraFeed');
+      const shell = document.getElementById('appShell');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+      if (state.camStream) {
+        shell.classList.add('cam-active');
+        video.classList.add('live');
         return;
       }
       try {
@@ -748,169 +761,253 @@
           video: { facingMode: { ideal: 'environment' } },
           audio: false
         });
-        state.stream = stream;
+        state.camStream = stream;
         video.srcObject = stream;
-        video.classList.add('active');
-        shell.classList.add('cam-live');
-        state.camOn = true;
-        state.camKey = 'camOn';
-      } catch (e) {
-        state.camOn = false;
-        state.camKey = 'camErr';
+        video.classList.add('live');
+        shell.classList.add('cam-active');
+      } catch (_) {
+        // Резервный режим без камеры работает плавно
       }
-      render();
     }
 
-    function shiftChest() {
-      state.spotIdx = (state.spotIdx + 1) % spots.length;
-      const btn = document.getElementById('btnCatch');
-      if (btn) {
-        btn.style.left = spots[state.spotIdx].left;
-        btn.style.top = spots[state.spotIdx].top;
-      }
-      chime(440);
-    }
+    function enterTale() {
+      playChime(440);
+      enableCameraIfPossible();
+      openScreen('intro');
+      const video = document.getElementById('introVideo');
+      video.src = 'intro.mp4';
+      video.onloadeddata = () => {
+        video.classList.add('playing');
+        video.play().catch(() => {});
+      };
+      video.onerror = () => {
+        video.classList.remove('playing');
+      };
 
-    function openScreen(name) {
-      state.screen = name;
-      document.querySelectorAll('.scene-screen').forEach(el => el.classList.remove('active'));
-      document.getElementById('screen-' + name).classList.add('active');
-      document.querySelectorAll('.dock button').forEach(b => b.classList.remove('active'));
-      document.getElementById('nav-' + name).classList.add('active');
-
-      if (name === 'hunt') {
-        if (!state.animId) drawSparks();
-        if (!state.moveId) {
-          state.moveId = setInterval(() => {
-            if (nextItem()) shiftChest();
-          }, 2800);
+      let beat = 0;
+      const t = I18N[state.lang];
+      document.getElementById('introCaptionText').textContent = t.introBeats[0];
+      clearInterval(state.introTimer);
+      state.introTimer = setInterval(() => {
+        beat += 1;
+        const curLang = I18N[state.lang];
+        if (beat < curLang.introBeats.length) {
+          document.getElementById('introCaptionText').textContent = curLang.introBeats[beat];
+        } else {
+          finishIntro();
         }
+      }, 3200);
+    }
+
+    function finishIntro() {
+      clearInterval(state.introTimer);
+      const video = document.getElementById('introVideo');
+      video.pause();
+      video.classList.remove('playing');
+      playChime(659.25);
+      openScreen('gift1');
+    }
+
+    function startJourney() {
+      playChime(587.33);
+      enableCameraIfPossible();
+      openScreen('nav');
+    }
+
+    function openQuestAtCurrentPoint() {
+      if (state.currentIdx >= ROUTE_POINTS.length) return;
+      state.sparksCaught = 0;
+      moveSparkRandomly();
+      playChime(523.25);
+      openScreen('quest');
+    }
+
+    function moveSparkRandomly() {
+      const btn = document.getElementById('sparkBtn');
+      const positions = [
+        { x: 28, y: 36 },
+        { x: 72, y: 34 },
+        { x: 52, y: 58 },
+        { x: 34, y: 64 }
+      ];
+      const p = positions[state.sparksCaught % positions.length];
+      btn.style.left = p.x + '%';
+      btn.style.top = p.y + '%';
+    }
+
+    function collectSpark() {
+      const pt = ROUTE_POINTS[state.currentIdx];
+      if (!pt) return;
+      state.sparksCaught += 1;
+      playChime(698.46 + state.sparksCaught * 60);
+
+      if (state.sparksCaught >= pt.sparksNeeded) {
+        if (!state.completed[state.currentIdx]) {
+          state.completed[state.currentIdx] = true;
+          state.points += pt.pts;
+        }
+        playChime(880);
+        openScreen('reward');
       } else {
-        if (state.animId) { cancelAnimationFrame(state.animId); state.animId = null; }
-        if (state.moveId) { clearInterval(state.moveId); state.moveId = null; }
+        moveSparkRandomly();
+        renderAll();
+      }
+    }
+
+    function advanceAfterReward() {
+      const nextUnfinished = state.completed.findIndex(done => !done);
+      if (nextUnfinished !== -1) {
+        state.currentIdx = nextUnfinished;
+        openScreen('nav');
+      } else {
+        openScreen('nav');
+      }
+    }
+
+    function shareResult() {
+      const text = `Алтын Керуен • MEGA Silk Way: собрано ${state.points} демо-баллов!`;
+      if (navigator.share) {
+        navigator.share({ title: 'Алтын Керуен', text }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+    }
+
+    function openSheet(mode) {
+      const t = I18N[state.lang];
+      const backdrop = document.getElementById('sheetBackdrop');
+      const titleEl = document.getElementById('sheetTitle');
+      const bodyEl = document.getElementById('sheetBody');
+      bodyEl.innerHTML = '';
+
+      if (mode === 'map') {
+        titleEl.textContent = t.sheetMapTitle;
+        ROUTE_POINTS.forEach((p, idx) => {
+          const isDone = state.completed[idx];
+          const isActive = !isDone && idx === state.currentIdx;
+          const card = document.createElement('div');
+          card.className = 'route-item' + (isDone ? ' done' : (!isActive ? ' locked' : ''));
+          const statusLabel = isDone ? t.stDone : (isActive ? t.stActive : t.stLocked);
+          const statusClass = isDone ? 'st-done' : (isActive ? 'st-active' : 'st-locked');
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <strong style="font-size:13.5px;color:var(--ink);">${idx + 1}. ${state.lang === 'ru' ? p.ruZone : p.kzZone}</strong>
+              <span class="badge-status ${statusClass}">${statusLabel}</span>
+            </div>
+            <span style="font-size:12px;color:var(--ink-soft);">${state.lang === 'ru' ? p.ruLandmark : p.kzLandmark} (${p.dist})</span>
+          `;
+          if (isActive) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'ghost-btn';
+            btn.textContent = t.btnArrivePoint;
+            btn.onclick = () => { closeSheet(); openQuestAtCurrentPoint(); };
+            card.appendChild(btn);
+          }
+          bodyEl.appendChild(card);
+        });
+      } else if (mode === 'chest') {
+        titleEl.textContent = t.sheetChestTitle;
+        const foundCount = state.completed.filter(Boolean).length;
+        const remaining = ROUTE_POINTS.length - foundCount;
+        const summary = document.createElement('div');
+        summary.className = 'route-item done';
+        summary.innerHTML = `
+          <div style="display:flex;justify-content:space-between;">
+            <span>${state.lang === 'ru' ? 'Собрано демо-баллов:' : 'Жиналған демо-ұпай:'}</span>
+            <strong style="color:var(--gold-1);font-size:16px;">${state.points}</strong>
+          </div>
+          <span style="font-size:12px;color:var(--ink-soft);">${state.lang === 'ru' ? `Открыто точек: ${foundCount} из ${ROUTE_POINTS.length} • Осталось: ${remaining}` : `Ашылған нүкте: ${foundCount} / ${ROUTE_POINTS.length} • Қалды: ${remaining}`}</span>
+        `;
+        bodyEl.appendChild(summary);
+
+        ROUTE_POINTS.forEach((p, idx) => {
+          const isDone = state.completed[idx];
+          const row = document.createElement('div');
+          row.className = 'route-item' + (isDone ? ' done' : ' locked');
+          row.innerHTML = `
+            <div style="display:flex;justify-content:space-between;">
+              <strong style="font-size:13px;">${state.lang === 'ru' ? p.ruReward : p.kzReward}</strong>
+              <span style="color:var(--gold-1);font-weight:700;">+${p.pts}</span>
+            </div>
+            <span style="font-size:12px;color:var(--ink-soft);">${isDone ? t.stDone : t.stLocked}</span>
+          `;
+          bodyEl.appendChild(row);
+        });
+      } else {
+        titleEl.textContent = t.sheetHelpTitle;
+        const helpCard = document.createElement('div');
+        helpCard.className = 'route-item';
+        helpCard.innerHTML = `
+          <p style="font-size:13px;line-height:1.45;color:var(--ink-soft);">${t.hudSafetyTip}</p>
+          <p style="font-size:11.5px;line-height:1.4;color:var(--gold-2);margin-top:6px;">${t.demoLegal}</p>
+        `;
+        bodyEl.appendChild(helpCard);
       }
 
-      if (name === 'qr') runTimer();
-      else stopTimer();
-
-      render();
+      backdrop.classList.add('open');
     }
 
-    function runTimer() {
-      stopTimer();
-      state.timerId = setInterval(() => {
-        state.sec = (state.sec + 1) % 31;
-        render();
-      }, 1000);
+    function closeSheet() {
+      document.getElementById('sheetBackdrop').classList.remove('open');
     }
 
-    function stopTimer() {
-      if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+    function closeSheetOnBackdrop(e) {
+      if (e.target.id === 'sheetBackdrop') closeSheet();
     }
 
-    function nextItem() {
-      return state.items.find(it => !it.found) || null;
-    }
-
-    function catchGift() {
-      const it = nextItem();
-      if (!it) return;
-      it.found = true;
-      state.points += it.pts;
-      chime(783.99);
-      shiftChest();
-      render();
-    }
-
-    function render() {
-      const d = dict[state.lang];
+    function renderAll() {
+      const t = I18N[state.lang];
       document.documentElement.lang = state.lang;
-      document.getElementById('btnLang').textContent = d.btnLang;
-      document.getElementById('btnSound').textContent = state.soundOn ? '🔊' : '🔇';
-      document.getElementById('btnCamTop').textContent = state.camOn ? d.camTopOn : d.camTopOff;
-      document.getElementById('btnCamMain').textContent = state.camOn ? d.btnCamOff : d.btnCamMain;
-      document.getElementById('txtCamStatus').textContent = d[state.camKey];
-      document.getElementById('txtBadgeTime').textContent = `${state.sec} / 30 с`;
+      document.getElementById('hdrCity').textContent = t.hdrCity;
+      document.getElementById('btnLang').textContent = t.btnLang;
+      document.getElementById('qrSub').textContent = t.qrSub;
+      document.getElementById('qrTitle').textContent = t.qrTitle;
+      document.getElementById('btnEnterTale').textContent = t.btnEnterTale;
+      document.getElementById('btnSkipIntro').textContent = t.btnSkipIntro;
+      document.getElementById('gift1Tag').textContent = t.gift1Tag;
+      document.getElementById('gift1Title').textContent = t.gift1Title;
+      document.getElementById('gift1Desc').textContent = t.gift1Desc;
+      document.getElementById('btnStartJourney').textContent = t.btnStartJourney;
+      document.getElementById('hudSafetyTip').textContent = t.hudSafetyTip;
+      document.getElementById('btnArrivePoint').textContent = t.btnArrivePoint;
+      document.getElementById('btnNavMap').textContent = t.btnNavMap;
+      document.getElementById('btnNavChest').textContent = t.btnNavChest;
+      document.getElementById('btnNavHelp').textContent = t.btnNavHelp;
+      document.getElementById('btnBackToNav').textContent = t.btnBackToNav;
+      document.getElementById('questPrompt').textContent = t.questPrompt;
+      document.getElementById('btnShareRes').textContent = t.btnShareRes;
+      document.getElementById('btnFinalMap').textContent = t.btnFinalMap;
 
-      const beatIdx = state.sec < 8 ? 0 : (state.sec < 15 ? 1 : (state.sec < 22 ? 2 : 3));
-      document.getElementById('txtSceneBeat').textContent = d.beats[beatIdx];
+      const pt = ROUTE_POINTS[state.currentIdx] || ROUTE_POINTS[ROUTE_POINTS.length - 1];
+      document.getElementById('hudStagePill').textContent =
+        `${state.lang === 'ru' ? 'Точка' : 'Нүкте'} ${Math.min(state.currentIdx + 1, ROUTE_POINTS.length)} ${state.lang === 'ru' ? 'из' : '/'} ${ROUTE_POINTS.length} • ${state.lang === 'ru' ? pt.ruZone : pt.kzZone}`;
+      document.getElementById('hudDistPill').textContent = `${pt.dist} • ${state.points} ${state.lang === 'ru' ? 'б.' : 'ұ.'}`;
+      document.getElementById('questCounter').textContent =
+        `${state.lang === 'ru' ? 'Искры' : 'Ұшқын'}: ${state.sparksCaught} / ${pt.sparksNeeded}`;
 
-      ['txtKicker','txtBadgeQr','txtTitle','txtVideoHint','txtIntroCopy','btnStartHunt','txtLegal','txtCatch','btnShift','btnToRoute','txtRouteHeading','txtRouteNote','txtPtsLabel','txtGiftsNote'].forEach(id => {
-        document.getElementById(id).textContent = d[id];
-      });
-
-      ['nav-qr','nav-hunt','nav-route','nav-gifts'].forEach(id => {
-        const key = { 'nav-qr':'navQr', 'nav-hunt':'navHunt', 'nav-route':'navRoute', 'nav-gifts':'navGifts' }[id];
-        document.getElementById(id).textContent = d[key];
-      });
-
-      const foundCnt = state.items.filter(i => i.found).length;
-      document.getElementById('txtScore').textContent = `${foundCnt} / ${state.items.length} • ${state.points} б.`;
-
-      const cur = nextItem();
-      const catchBtn = document.getElementById('btnCatch');
-      if (cur) {
-        catchBtn.style.display = 'flex';
-        document.getElementById('txtRadar').textContent = `🧭 ${state.lang === 'ru' ? cur.ruZone : cur.kzZone}`;
-        document.getElementById('txtCurrentGift').textContent = state.lang === 'ru' ? cur.ruGift : cur.kzGift;
-        document.getElementById('txtCurrentStep').textContent = state.lang === 'ru' ? cur.ruStep : cur.kzStep;
+      const allDone = state.completed.every(Boolean);
+      const shareRow = document.getElementById('finalShareRow');
+      const nextBtn = document.getElementById('btnNextAfterReward');
+      if (allDone) {
+        document.getElementById('rewardBadge').textContent = t.finalTitle;
+        document.getElementById('rewardTitle').textContent = `${state.lang === 'ru' ? 'Итого баллов:' : 'Жалпы ұпай:'} ${state.points}`;
+        document.getElementById('rewardPoints').textContent = `${state.lang === 'ru' ? 'Открыто сокровищ:' : 'Ашылған қазына:'} ${ROUTE_POINTS.length} / ${ROUTE_POINTS.length}`;
+        document.getElementById('rewardCongrat').textContent = t.finalCongrat;
+        nextBtn.style.display = 'none';
+        shareRow.style.display = 'flex';
       } else {
-        catchBtn.style.display = 'none';
-        document.getElementById('txtRadar').textContent = '✦ 3 / 3';
-        document.getElementById('txtCurrentGift').textContent = d.doneAll;
-        document.getElementById('txtCurrentStep').textContent = '';
+        document.getElementById('rewardBadge').textContent = t.rewardBadge;
+        document.getElementById('rewardTitle').textContent = state.lang === 'ru' ? pt.ruReward : pt.kzReward;
+        document.getElementById('rewardPoints').textContent = `+${pt.pts} ${state.lang === 'ru' ? 'демо-баллов' : 'демо-ұпай'} (${state.lang === 'ru' ? 'Всего:' : 'Барлығы:'} ${state.points})`;
+        document.getElementById('rewardCongrat').textContent = state.lang === 'ru' ? pt.ruLandmark : pt.kzLandmark;
+        nextBtn.style.display = 'block';
+        nextBtn.textContent = t.nextPointCta;
+        shareRow.style.display = 'none';
       }
-
-      const ribbon = document.getElementById('routeRibbon');
-      ribbon.innerHTML = '';
-      state.items.forEach((it, idx) => {
-        const el = document.createElement('div');
-        el.className = 'route-stop-pill' + (it.found ? ' done' : '');
-        el.textContent = `${idx + 1}. ${state.lang === 'ru' ? it.ruZone : it.kzZone}`;
-        ribbon.appendChild(el);
-      });
-
-      const routeCards = document.getElementById('routeCards');
-      routeCards.innerHTML = '';
-      state.items.forEach(it => {
-        const row = document.createElement('div');
-        row.className = 'ornate-row' + (it.found ? ' done' : '');
-        row.innerHTML = `
-          <div class="row-flex">
-            <strong style="font-size:12.5px;">${state.lang === 'ru' ? it.ruStep : it.kzStep}</strong>
-            <span style="font-size:12px;color:var(--gold-light);font-weight:800;">+${it.pts}</span>
-          </div>
-          <span style="font-size:11.5px;color:var(--turquoise);">${state.lang === 'ru' ? it.ruGift : it.kzGift}</span>
-        `;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.disabled = it.found;
-        btn.textContent = it.found ? d.caughtState : d.goHunt;
-        btn.onclick = () => openScreen('hunt');
-        row.appendChild(btn);
-        routeCards.appendChild(row);
-      });
-
-      document.getElementById('txtPtsVal').textContent = state.points;
-      const giftCards = document.getElementById('giftCards');
-      giftCards.innerHTML = '';
-      state.items.forEach(it => {
-        const card = document.createElement('div');
-        card.className = 'ornate-row' + (it.found ? ' done' : '');
-        card.innerHTML = `
-          <div class="row-flex">
-            <strong style="font-size:12.5px;">${state.lang === 'ru' ? it.ruGift : it.kzGift}</strong>
-            <span style="font-size:12px;color:var(--gold-light);font-weight:800;">+${it.pts}</span>
-          </div>
-          <span style="font-size:11.5px;color:${it.found ? 'var(--ok)' : 'var(--muted)'};">${it.found ? d.giftsUnlocked : d.giftsLocked}</span>
-        `;
-        giftCards.appendChild(card);
-      });
     }
 
-    checkVideo();
-    runTimer();
-    render();
+    renderAll();
   </script>
 </body>
 </html>
